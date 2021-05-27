@@ -1,0 +1,4 @@
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.AssemblyInfoInputs.cache
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.AssemblyInfo.cs
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.csproj.CoreCompileInputs.cache

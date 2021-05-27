@@ -11,7 +11,7 @@ namespace Term_ProjectServer
    {
       public static int MaxPlayers { get; private set; }
 
-      private static int Port { get; private set; }
+      public static int Port { get; private set; }
 
       private static TcpListener tcpListener;
 
