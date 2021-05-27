@@ -2,16 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
-using System.Net.Sockets
+using System.Net.Sockets;
 
 
-namespace Term_Project
+namespace Term_ProjectServer
 {
    class server
    {
       public static int MaxPlayers { get; private set; }
 
-      public static int Port { get; private set; }
+      private static int Port { get; private set; }
 
       private static TcpListener tcpListener;
 
