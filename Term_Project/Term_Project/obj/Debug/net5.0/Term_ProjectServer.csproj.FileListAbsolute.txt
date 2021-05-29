@@ -2,3 +2,15 @@ C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\n
 C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.AssemblyInfoInputs.cache
 C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.AssemblyInfo.cs
 C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.csproj.CoreCompileInputs.cache
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.csprojAssemblyReference.cache
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\bin\Debug\net5.0\Term_ProjectServer.exe
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\bin\Debug\net5.0\Term_ProjectServer.deps.json
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\bin\Debug\net5.0\Term_ProjectServer.runtimeconfig.json
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\bin\Debug\net5.0\Term_ProjectServer.runtimeconfig.dev.json
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\bin\Debug\net5.0\Term_ProjectServer.dll
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\bin\Debug\net5.0\ref\Term_ProjectServer.dll
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\bin\Debug\net5.0\Term_ProjectServer.pdb
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.dll
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\ref\Term_ProjectServer.dll
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.pdb
+C:\Users\Kai\Documents\GitHub\Term-Project\Term_Project\Term_Project\obj\Debug\net5.0\Term_ProjectServer.genruntimeconfig.cache

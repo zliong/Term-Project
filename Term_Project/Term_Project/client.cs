@@ -11,7 +11,7 @@ namespace Term_ProjectServer
         public static int dataBufferSize = 4096;
 
         public int id;
-        public TcpClient tcp;
+        public TCP tcp;
 
         public Client(int _clientId)
         {

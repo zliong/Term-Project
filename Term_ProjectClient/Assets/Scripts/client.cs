@@ -118,7 +118,7 @@ public class Client : MonoBehaviour
 
             while (_packetLength > 0 && _packetLength <= receivedData.UnreadLength())
             {
-                byte[] _packetBytes = receivedData.(_packetLength);// If there is a problem below talk to carson
+                byte[] _packetBytes = receivedData.ReadBytes(_packetLength);// If there is a problem below talk to carson
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
                     using (Packet _packet = new Packet(_packetBytes))
@@ -149,7 +149,20 @@ public class Client : MonoBehaviour
 
             return false;
         }
-
+        public void SendData(Packet packet)
+        {
+            try
+            {
+                if (sock != null)
+                {
+                    stream.BeginWrite(packet.ToArray(), 0, packet.Length(), null, null);
+                }
+            }
+            catch (Exception _ex)
+            {
+                Debug.Log($"Error sending data to server via TCP: {_ex}");
+            }
+        }
     }
 
     private void InitializeClientData(){
