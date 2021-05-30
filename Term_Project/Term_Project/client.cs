@@ -68,7 +68,7 @@ namespace Term_ProjectServer
                     int _byteLength = stream.EndRead(_result);
                     if(_byteLength <= 0)
                     {
-                        //TODO: Disconnect
+                        server.clients[id].Disconnect();
                         return;
                     }
 
@@ -81,15 +81,30 @@ namespace Term_ProjectServer
                 catch(Exception _ex)
                 {
                     Console.WriteLine($"Error receiving TCP data: { _ex}");
-                    //TODO: Disconnect
-                   
-                }
+                    server.clients[id].Disconnect();
+
+            }
+            }
+            public void Disconnect()
+            {
+            socket.Close();
+            receivedData = null;
+            receiveBuffer = null;
+            socket = null;
             }
         }
 
         public void SendIntoGame(string player_name)
         {
             player = new Player(id, player_name, new Vector3(0, 0, 0));
+        }
+
+        //This is out here because, if we had implemented UDP, we would need to call that as well, but we did not.
+        private void Disconnect()
+        {
+            Console.WriteLine("A client has disconnected");
+         player = null;
+         tcp.Disconnect();
         }
     }
 }
