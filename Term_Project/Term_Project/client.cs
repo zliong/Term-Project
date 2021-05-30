@@ -45,7 +45,7 @@ namespace Term_ProjectServer
 
                 stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallBack, null);
 
-                //TO-DO: Send welcome packet
+                ServerSend.Welcome(id, "You have connected to the game server.");
             }
 
             public void SendData(Packet packet)
