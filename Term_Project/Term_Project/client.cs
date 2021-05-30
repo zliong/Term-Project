@@ -55,7 +55,7 @@ namespace Term_ProjectServer
             {
                if (socket != null)
                {
-                  stream.BeginWrite(packet.ToArray(), 0, packet.Length, null, null);
+                  stream.BeginWrite(packet.ToArray(), 0, packet.Length(), null, null);
                }
             }
             catch (Exception e) { Console.WriteLine("Error occured while sending data to a player through TCP."); }
