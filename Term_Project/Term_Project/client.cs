@@ -49,7 +49,7 @@ namespace Term_ProjectServer
             }
 
             public void SendData(Packet packet)
-         {
+        {
             //Not sure what errors can happen, but tutorial says to try/catch.
             try
             {
@@ -59,7 +59,7 @@ namespace Term_ProjectServer
                }
             }
             catch(Exception e) { Console.WriteLine("Error occured while sending data to a player through TCP."); }
-         }
+        }
 
             private void ReceiveCallBack(IAsyncResult _result)
             {
@@ -84,13 +84,8 @@ namespace Term_ProjectServer
                     //TODO: Disconnect
                    
                 }
-
-                
-
             }
-
         }
-
 
         public void SendIntoGame(string player_name)
         {
