@@ -48,6 +48,19 @@ namespace Term_ProjectServer
                 //TO-DO: Send welcome packet
             }
 
+            public void SendData(Packet packet)
+         {
+            //Not sure what errors can happen, but tutorial says to try/catch.
+            try
+            {
+               if(socket != null)
+               {
+                  stream.BeginWrite(packet.ToArray(), 0, packet.Length, null, null);
+               }
+            }
+            catch(Exception e) { Console.WriteLine("Error occured while sending data to a player through TCP."); }
+         }
+
             private void ReceiveCallBack(IAsyncResult _result)
             {
                 try
