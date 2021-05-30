@@ -15,6 +15,7 @@ public class Client : MonoBehaviour
     public int myId = 0; //Changed this to match Thread manager 
     public TCP tcp_;
 
+    private bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
 
@@ -34,54 +35,61 @@ public class Client : MonoBehaviour
     {
         tcp_ = new TCP();
     }
+
+    private void OnApplicationQuit()
+    {
+        Disconnect();
+    }
+
     public void ConnectToServer()
     {
         InitializeClientData();
 
+        isConnected = true;
         tcp_.Connect();
     }
 
 
     public class TCP
     {
-        public TcpClient sock;
+        public TcpClient socket;
 
         private NetworkStream stream;
         private Packet receivedData;
-        private byte[] receiveBuf;
+        private byte[] receivedBuffer;
 
         public void Connect()
         {
-            sock = new TcpClient
+            socket = new TcpClient
             {
                 ReceiveBufferSize = bufsize,
                 SendBufferSize = bufsize
             };
-            receiveBuf = new byte[bufsize]; //intialize the data buffer for client to receive
-            sock.BeginConnect(instance.ip, instance.port, ConnectCallBack, sock);   //connect the client to the ip 
+            receivedBuffer = new byte[bufsize]; //intialize the data buffer for client to receive
+            socket.BeginConnect(instance.ip, instance.port, ConnectCallBack, socket);   //connect the client to the ip 
 
         }
         private void ConnectCallBack(IAsyncResult result)
         {
-            sock.EndConnect(result);   //ends any pending connections to the server
+            socket.EndConnect(result);   //ends any pending connections to the server
 
             //check if socket has successfully connected
-            if (sock.Connected == false)
+            if (socket.Connected == false)
             {
                 return;
             }
-            stream = sock.GetStream();
+            stream = socket.GetStream();
 
             receivedData = new Packet();
 
-            stream.BeginRead(receiveBuf, 0, bufsize, ReceiveCallBack, null);
+            stream.BeginRead(receivedBuffer, 0, bufsize, ReceiveCallBack, null);
         }
 
-        public void SendData(PacketHandler _packet)
+        public void SendData(Packet _packet)
         {
             try
             {
-                if(Socket != null)
+                if(socket != null)
                 {
                     stream.BeginWrite(_packet.ToArray(), 0, _packet.Length(), null, null);
                 }
@@ -100,20 +108,20 @@ public class Client : MonoBehaviour
                 int byte_length = stream.EndRead(result);
                 if (byte_length <= 0)
                 {
-                    //disconnect 
+                    instance.Disconnect();
                     return;
                 }
                 byte[] data = new byte[byte_length];
-                Array.Copy(receiveBuf, data, byte_length);  //copy receiveBuf to data, should be same length
+                Array.Copy(receivedBuffer, data, byte_length);  //copy receiveBuf to data, should be same length
 
                 receivedData.Reset(HandleData(data));
 
                 //handle data
-                stream.BeginRead(receiveBuf, 0, bufsize, ReceiveCallBack, null);
+                stream.BeginRead(receivedBuffer, 0, bufsize, ReceiveCallBack, null);
             }
             catch
             {
-                //disonnect client
+                Disconnect();
             }
 
         }
@@ -134,7 +142,7 @@ public class Client : MonoBehaviour
 
             while (_packetLength > 0 && _packetLength <= receivedData.UnreadLength())
             {
-                byte[] _packetBytes = receivedData.(_packetLength);// If there is a problem below talk to carson
+                byte[] _packetBytes = receivedData.ReadBytes(_packetLength);// If there is a problem below talk to carson
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
                     using (Packet _packet = new Packet(_packetBytes))
@@ -166,7 +174,19 @@ public class Client : MonoBehaviour
             return false;
         }
 
+
+        private void Disconnect()
+        {
+            instance.Disconnect();
+
+            stream = null;
+            receivedData = null;
+            receivedBuffer = null;
+            socket = null;
+        } 
     }
+
+    
 
     private void InitializeClientData(){
         packetHandlers = new Dictionary<int, PacketHandler>()
@@ -174,5 +194,17 @@ public class Client : MonoBehaviour
             {(int)ServerPackets.welcome, ClientHandle.Welcome }
         };
         Debug.Log("Initialize packets.");
+    }
+
+    private void Disconnect()
+    {
+        if (isConnected)
+        {
+            isConnected = false;
+            tcp_.socket.Close();
+            //udp socket close will go here if change is made
+
+            Debug.Log("Disconnected from  server.");
+        }
     }
 }
