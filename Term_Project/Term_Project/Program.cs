@@ -1,14 +1,16 @@
 ﻿using System;
 
-namespace Term_Project
+namespace Term_ProjectServer
 {
     class Program
     {
         static void Main(string[] args)
         {
-         Term_ProjectServer.server.Start(8, 1337);
+            Console.Title = "Game Server";
 
-            Console.WriteLine("Hello World!");
+            server.Start(50, 25568);
+
+            Console.ReadKey();
         }
     }
 }

@@ -17,8 +17,8 @@ namespace Term_ProjectServer
 
       public static void Start(int maxPlayers, int port)
       {
-         maxPlayers = server.MaxPlayers;  //For clarity.
-         port = server.Port;              //For clarity.
+         MaxPlayers = maxPlayers;  //For clarity.
+         Port = port;              //For clarity.
 
          Console.WriteLine("Revving up the server!");
 

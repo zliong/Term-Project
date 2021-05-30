@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Numerics;
 
 namespace Term_ProjectServer
 {
@@ -11,7 +12,8 @@ namespace Term_ProjectServer
         public static int dataBufferSize = 4096;
 
         public int id;
-        public TcpClient tcp;
+        public Player player;
+        public TCP tcp;
 
         public Client(int _clientId)
         {
@@ -76,5 +78,10 @@ namespace Term_ProjectServer
 
         }
 
+
+        public void SendIntoGame(string player_name)
+        {
+            player = new Player(id, player_name, new Vector3(0, 0, 0));
+        }
     }
 }

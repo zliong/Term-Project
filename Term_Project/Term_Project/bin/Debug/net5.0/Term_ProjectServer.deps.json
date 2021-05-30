@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "Term_ProjectServer/1.0.0": {
+        "runtime": {
+          "Term_ProjectServer.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Term_ProjectServer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
