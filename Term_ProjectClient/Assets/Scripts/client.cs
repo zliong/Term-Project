@@ -52,44 +52,44 @@ public class Client : MonoBehaviour
 
     public class TCP
     {
-        public TcpClient sock;
+        public TcpClient socket;
 
         private NetworkStream stream;
         private Packet receivedData;
-        private byte[] receiveBuf;
+        private byte[] receivedBuffer;
 
         public void Connect()
         {
-            sock = new TcpClient
+            socket = new TcpClient
             {
                 ReceiveBufferSize = bufsize,
                 SendBufferSize = bufsize
             };
-            receiveBuf = new byte[bufsize]; //intialize the data buffer for client to receive
-            sock.BeginConnect(instance.ip, instance.port, ConnectCallBack, sock);   //connect the client to the ip 
+            receivedBuffer = new byte[bufsize]; //intialize the data buffer for client to receive
+            socket.BeginConnect(instance.ip, instance.port, ConnectCallBack, socket);   //connect the client to the ip 
 
         }
         private void ConnectCallBack(IAsyncResult result)
         {
-            sock.EndConnect(result);   //ends any pending connections to the server
+            socket.EndConnect(result);   //ends any pending connections to the server
 
             //check if socket has successfully connected
-            if (sock.Connected == false)
+            if (socket.Connected == false)
             {
                 return;
             }
-            stream = sock.GetStream();
+            stream = socket.GetStream();
 
             receivedData = new Packet();
 
-            stream.BeginRead(receiveBuf, 0, bufsize, ReceiveCallBack, null);
+            stream.BeginRead(receivedBuffer, 0, bufsize, ReceiveCallBack, null);
         }
 
-        public void SendData(PacketHandler _packet)
+        public void SendData(Packet _packet)
         {
             try
             {
-                if(Socket != null)
+                if(socket != null)
                 {
                     stream.BeginWrite(_packet.ToArray(), 0, _packet.Length(), null, null);
                 }
@@ -112,12 +112,12 @@ public class Client : MonoBehaviour
                     return;
                 }
                 byte[] data = new byte[byte_length];
-                Array.Copy(receiveBuf, data, byte_length);  //copy receiveBuf to data, should be same length
+                Array.Copy(receivedBuffer, data, byte_length);  //copy receiveBuf to data, should be same length
 
                 receivedData.Reset(HandleData(data));
 
                 //handle data
-                stream.BeginRead(receiveBuf, 0, bufsize, ReceiveCallBack, null);
+                stream.BeginRead(receivedBuffer, 0, bufsize, ReceiveCallBack, null);
             }
             catch
             {
@@ -142,7 +142,7 @@ public class Client : MonoBehaviour
 
             while (_packetLength > 0 && _packetLength <= receivedData.UnreadLength())
             {
-                byte[] _packetBytes = receivedData.(_packetLength);// If there is a problem below talk to carson
+                byte[] _packetBytes = receivedData.ReadBytes(_packetLength);// If there is a problem below talk to carson
                 ThreadManager.ExecuteOnMainThread(() =>
                 {
                     using (Packet _packet = new Packet(_packetBytes))
