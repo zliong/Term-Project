@@ -40,7 +40,7 @@ namespace Term_ProjectServer
          {
             if(clients[i].tcp.socket == null)
             {
-               clients[i].tcp.Connect(_client);
+               clients[i].tcp.Connect(client);
                return;
             }
          }
