@@ -43,6 +43,7 @@ namespace Term_ProjectServer
             stream = socket.GetStream();
 
             receiveBuffer = new byte[dataBufferSize];
+            receiveBuffer = new Packet();
 
             stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallBack, null);
 
@@ -76,7 +77,9 @@ namespace Term_ProjectServer
                byte[] _data = new byte[_byteLength];
                Array.Copy(receiveBuffer, _data, _byteLength);
 
-               //TODO: Handle
+               receivedData.Reset(HandleData(_data));
+
+               //TODO: Handle //Not sure this is needed, should test it.
                stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallBack, null);
             }
             catch (Exception _ex)
@@ -86,6 +89,41 @@ namespace Term_ProjectServer
 
             }
          }
+
+         private bool HandleData(byte[] data)
+         {
+            int packetSize = 0;
+
+            receivedData.SetBytes(data);
+            if (receivedData.UnreadLength() >= 4) //4 is the next byte of data.
+            {
+               packetSize = receivedData.ReadInt();
+               if(packetSize <= 0) { return true; }
+            }
+
+            while(packetSize > 0 && packetSize <= receivedData.UnreadLength())
+            {
+               byte[] packetData = receivedData.ReadBytes(packetSize);
+               //TODO: thread stuff here.
+
+               //Retry test above.
+               packetSize = 0;
+                           receivedData.SetBytes(data);
+               if (receivedData.UnreadLength() >= 4) //4 is the next byte of data.
+               {
+                  packetSize = receivedData.ReadInt();
+                  if(packetSize <= 0) { return true; }
+               }
+            }
+            if(packetSize <= 1)
+            {
+               return true;
+            }
+
+            //Catch anything bad.
+            return false;
+         }
+
          public void Disconnect()
          {
             socket.Close();
