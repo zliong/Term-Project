@@ -38,7 +38,7 @@ namespace Term_ProjectServer
 
          for(int i = 1; i <= MaxPlayers; i++)
          {
-            if(clients[i].tcp.Connected == false) //Change from guide for perhaps more efficiency. If something doesn't work check here, may need to be .tcp.socket.
+            if(clients[i].tcp.socket == null)
             {
                clients[i].tcp.Connect(_client);
                return;
