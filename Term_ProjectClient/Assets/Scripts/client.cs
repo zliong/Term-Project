@@ -15,6 +15,7 @@ public class Client : MonoBehaviour
     public int myId = 0; //Changed this to match Thread manager 
     public TCP tcp_;
 
+    private bool isConnected = false;
     private delegate void PacketHandler(Packet _packet);
     private static Dictionary<int, PacketHandler> packetHandlers;
 
@@ -34,10 +35,17 @@ public class Client : MonoBehaviour
     {
         tcp_ = new TCP();
     }
+
+    private void OnApplicationQuit()
+    {
+        Disconnect();
+    }
+
     public void ConnectToServer()
     {
         InitializeClientData();
 
+        isConnected = true;
         tcp_.Connect();
     }
 
@@ -100,7 +108,7 @@ public class Client : MonoBehaviour
                 int byte_length = stream.EndRead(result);
                 if (byte_length <= 0)
                 {
-                    //disconnect 
+                    instance.Disconnect();
                     return;
                 }
                 byte[] data = new byte[byte_length];
@@ -113,7 +121,7 @@ public class Client : MonoBehaviour
             }
             catch
             {
-                //disonnect client
+                Disconnect();
             }
 
         }
@@ -166,7 +174,19 @@ public class Client : MonoBehaviour
             return false;
         }
 
+
+        private void Disconnect()
+        {
+            instance.Disconnect();
+
+            stream = null;
+            receivedData = null;
+            receivedBuffer = null;
+            socket = null;
+        } 
     }
+
+    
 
     private void InitializeClientData(){
         packetHandlers = new Dictionary<int, PacketHandler>()
@@ -174,5 +194,17 @@ public class Client : MonoBehaviour
             {(int)ServerPackets.welcome, ClientHandle.Welcome }
         };
         Debug.Log("Initialize packets.");
+    }
+
+    private void Disconnect()
+    {
+        if (isConnected)
+        {
+            isConnected = false;
+            tcp_.socket.Close();
+            //udp socket close will go here if change is made
+
+            Debug.Log("Disconnected from  server.");
+        }
     }
 }
