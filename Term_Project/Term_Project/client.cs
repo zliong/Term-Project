@@ -44,7 +44,7 @@ namespace Term_ProjectServer
 
            
             receiveBuffer = new byte[dataBufferSize];
-            receivedData new Packet();
+            receivedData = new Packet();
             stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallBack, null);
 
             ServerSend.Welcome(id, "You have connected to the game server.");
