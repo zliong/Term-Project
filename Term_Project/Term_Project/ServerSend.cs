@@ -32,8 +32,18 @@ namespace Term_ProjectServer
             server.clients[i].tcp.SendData(packet);
          }
       }
-
-      //Unsure currently how this is needed, hopefully further guide will explain it.
+      public static void SpawnPlayer(int _toClient, Player _player)
+      {
+          using (Packet _packet = new Packet((int)ServerPackets.spawnPlayer))
+          {
+              _packet.Write(_player.player_id);
+              _packet.Write(_player.username);
+              _packet.Write(_player.player_pos);
+              _packet.Write(_player.player_rotation);
+              SendTCPData(_toClient, _packet);
+          }
+      }
+        //Unsure currently how this is needed, hopefully further guide will explain it.
       public static void SendTCPDataToAllClientsExcept(int client, Packet packet) //Part 2: return of the spicy function names.
       {
          packet.WriteLength();

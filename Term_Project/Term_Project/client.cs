@@ -42,9 +42,9 @@ namespace Term_ProjectServer
 
             stream = socket.GetStream();
 
+           
             receiveBuffer = new byte[dataBufferSize];
-            receiveBuffer = new Packet();
-
+            receivedData new Packet();
             stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallBack, null);
 
             ServerSend.Welcome(id, "You have connected to the game server.");
@@ -136,6 +136,21 @@ namespace Term_ProjectServer
       public void SendIntoGame(string player_name)
       {
          player = new Player(id, player_name, new Vector3(0, 0, 0));
+            foreach (Client client in server.clients.Values)
+            {
+                if(client.player != null)
+                {
+                    if(client.id == null)
+                    {
+                        Console.WriteLine("Error! Unidentified Client!");
+                        return;
+                    }
+                    else
+                    {
+                        ServerSend.SpawnPlayer(id, client.player);
+                    }
+                }
+            }
       }
 
       //This is out here because, if we had implemented UDP, we would need to call that as well, but we did not.

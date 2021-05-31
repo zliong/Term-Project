@@ -162,12 +162,25 @@ namespace Term_ProjectServer
          Write(_value.Length); // Add the length of the string to the packet
          buffer.AddRange(Encoding.ASCII.GetBytes(_value)); // Add the string itself
       }
+      public void Write(Quaternion _value)
+      {
+          Write(_value.X);
+          Write(_value.Y);
+          Write(_value.Z);
+          Write(_value.W);
+      }
+      public void Write(Vector3 value)
+      {
+            Write(value.X);
+            Write(value.Y);
+            Write(value.Z);
+        }
       #endregion
 
-      #region Read Data
-      /// <summary>Reads a byte from the packet.</summary>
-      /// <param name="_moveReadPos">Whether or not to move the buffer's read position.</param>
-      public byte ReadByte(bool _moveReadPos = true)
+        #region Read Data
+        /// <summary>Reads a byte from the packet.</summary>
+        /// <param name="_moveReadPos">Whether or not to move the buffer's read position.</param>
+        public byte ReadByte(bool _moveReadPos = true)
       {
          if (buffer.Count > readPos)
          {

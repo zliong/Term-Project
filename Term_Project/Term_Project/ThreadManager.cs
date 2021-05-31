@@ -39,7 +39,7 @@ namespace Term_ProjectServer
                 }
                 for(int i = 0; i < executeCopiedOnMainThread.Count;i++)
                 {
-                    executeCopiedOnMainThread[i]();
+                    executeCopiedOnMainThread[i](); 
                 }
             }
         }
