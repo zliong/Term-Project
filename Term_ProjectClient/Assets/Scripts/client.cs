@@ -186,8 +186,6 @@ public class Client : MonoBehaviour
         } 
     }
 
-    
-
     private void InitializeClientData(){
         packetHandlers = new Dictionary<int, PacketHandler>()
         {
