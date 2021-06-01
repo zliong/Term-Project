@@ -188,7 +188,7 @@ int main(int argc, char* argv[]){
 		inp = 2;
 		cout << "You will play first." << endl << endl;
 	}
-
+/*
        //CUrrently right here with converting protocal to use message ------------------------------------------
 	init();
 	cout << endl << "Starting Game..." << endl;
@@ -266,6 +266,7 @@ int main(int argc, char* argv[]){
 	if (nc == 'f')
 		cout << endl << "Game ends in a draw." << endl;
 	cout << endl << "Thank You for playing Tic-tac-Toe" << endl;
+	*/
 	close(sockfd);
 
 	return 0;
