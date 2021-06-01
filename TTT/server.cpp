@@ -32,17 +32,17 @@ int main(int argc, char* argv[]) {
     sockaddr_in newsock;
     int totalConnections = 1; //Tic tac toe is 2 players, this client is the host and player 1.
 
-    bzero((char*) &acceptSock, sizeof(acceptSock));  // zero out the data structure
+    bzero((char*)&acceptSock, sizeof(acceptSock));  // zero out the data structure
     acceptSock.sin_family = AF_INET;   // using IP
     acceptSock.sin_addr.s_addr = htonl(INADDR_ANY); // listen on any address this computer has
     acceptSock.sin_port = htons(port);  // set the port to listen on
 
     int serverSd = socket(AF_INET, SOCK_STREAM, 0); // creates a new socket for IP using TCP
 
-    setsockopt(serverSd, SOL_SOCKET, SO_REUSEADDR, (char *) &on, sizeof(int));  // this lets us reuse the socket without waiting for hte OS to recycle it
+    setsockopt(serverSd, SOL_SOCKET, SO_REUSEADDR, (char*)&on, sizeof(int));  // this lets us reuse the socket without waiting for hte OS to recycle it
 
     // Bind the socket
-    bind(serverSd, (sockaddr*) &acceptSock, sizeof(acceptSock));  // bind the socket using the parameters we set earlier
+    bind(serverSd, (sockaddr*)&acceptSock, sizeof(acceptSock));  // bind the socket using the parameters we set earlier
 
     // Listen on the socket
     listen(serverSd, totalConnections);  // listen on the socket and allow up to n connections to wait.
@@ -50,7 +50,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Beginning to watch for another player!\n";
 
-    int newSd = accept(serverSd, (sockaddr *)&newsock, &newsockSize);
+    int newSd = accept(serverSd, (sockaddr*)&newsock, &newsockSize);
     std::cout << "Got a client to play tic tac toe with!";
 
     return 0;
