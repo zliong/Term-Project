@@ -15,9 +15,22 @@
 #include <pthread.h>      //Pthread
 #include <iostream>
 
+//Message Structure
+struct message {
+    std::string purpose;
+    std::string details;
+};
+
+//Function Prototype
+void* ConnectionProcessor(void* socket);
+bool checkClientResponse(message message, std::string expected);
+
 int main(int argc, char* argv[]) {
     //Local Variables
     int port;
+    std::string chat;
+    std::string input;
+    message messageHandler;
 
     //Improvement to make the program more user-friendly.
     try {
@@ -52,6 +65,89 @@ int main(int argc, char* argv[]) {
 
     int newSd = accept(serverSd, (sockaddr *)&newsock, &newsockSize);
     std::cout << "Got a client to play tic tac toe with!";
+
+    //Create new thread for chat message getting.
+    //pthread_t thread;
+
+    //Send the input to a thread to deal with it.
+    //pthread_create(&thread, nullptr, ConnectionProcessor, (void*) newSd);
+
+    //Move on now, work on getting this game going!
+    //Send message seeing if they're ready to play.
+    messageHandler.purpose = "READYCHECK";
+    messageHandler.details = nullptr;
+    write(newSd, &messageHandler, sizeof(messageHandler));
+
+    //Get response
+    while(messageHandler.details != "yes") {
+        read(newSd, &messageHandler, 100); //TODO: set to a good number.
+        if (!checkClientResponse(messageHandler, "READYCHECK")) {
+            close(newSd);
+            std::cout << "The client did not have an expected response. Closing.\n";
+            return -1;
+        }
+    }
+
+    //We're ready to play, choose a side.
+    messageHandler.purpose = "WHOFIRST";
+    messageHandler.details = "1 10";
+    write(newSd, &messageHandler, sizeof(messageHandler));
+
+    //Get from us our number.
+    std::cout << "Pick a number between 1 and 10 (inclusive).\n";
+    std::cin >> input;
+
+    //Get client response.
+    read(newSd, &messageHandler, 100); //TODO: set to a good number.
+    if (!checkClientResponse(messageHandler, "WHOFIRST")) {
+        close(newSd);
+        std::cout << "The client did not have an expected response. Closing.\n";
+        return -1;
+    }
+    
+    //Compare number, say who's going first.
+    messageHandler.purpose = "WHOFIRST";
+    if(input > messageHandler.details) {
+        std::cout << "You go first.\n";
+        messageHandler.details = "server";
+    }
+    else {
+        std::cout << "Client goes first.\n";
+        messageHandler.details = "client";
+    }
+    write(newSd, &messageHandler, sizeof(messageHandler));
+
+}
+
+//Check client response, if client response is bad (unexpected) the program reports and ends.
+bool checkClientResponse(message message, std::string expected) {
+    if(message.purpose != expected) {
+        return false;
+    }
+    return true;
+}
+
+void* ConnectionProcessor(void* socket) {
+    //Local Variables
+    timeval startTime;
+    timeval endTime;
+    connectionProcessorData* data = (connectionProcessorData*)(input);
+    int count = 0;
+
+    //Allocate databuf[BUFSIZE]
+    char databuf[BUFFERSIZE];
+
+    //Start a timer by calling gettimeofday.
+    gettimeofday(&startTime, NULL);
+
+    //Repeat reading data from the client into databuf[BUFSIZE].
+    for(int i =0; i < data->repetition; i++) {
+        for ( int nRead = 0;
+              (nRead += read(data->socket, databuf, BUFFERSIZE - nRead)) < BUFFERSIZE;
+              ++count );
+        count++;
+    }
+
 
     return 0;
 }
