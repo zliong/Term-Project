@@ -65,66 +65,67 @@ int input(char input, int row, int col)
 		do {} 		while (cin.get() != '\n');
 		return 1;
 	}
+}
 
-	char check()
+char check()
+{
+	int row, col;
+	char temp;
+
+	for (col = 0; col < 3; col++)
 	{
-		int row, col;
-		char temp;
-
-		for (col = 0; col < 3; col++)
+		if (Board[0][col] != '-')
 		{
-			if (Board[0][col] != '-')
+			temp = Board[0][col];
+			if (col == 0)
 			{
-				temp = Board[0][col];
-				if (col == 0)
-				{
-					if (Board[0][1] == temp)
-						if (Board[0][2] == temp)
-							return temp;
-					if (Board[1][0] == temp)
-						if (Board[2][0] == temp)
-							return temp;
-					if (Board[1][1] == temp)
-						if (Board[2][2] == temp)
-							return temp;
-				}
-				else if (col == 1)
-				{
-					if (Board[1][1] == temp)
-						if (Board[2][1] == temp)
-							return temp;
-				}
-				else
-				{
-					if (Board[1][2] == temp)
-						if (Board[2][2] == temp)
-							return temp;
-				}
+				if (Board[0][1] == temp)
+					if (Board[0][2] == temp)
+						return temp;
+				if (Board[1][0] == temp)
+					if (Board[2][0] == temp)
+						return temp;
+				if (Board[1][1] == temp)
+					if (Board[2][2] == temp)
+						return temp;
 			}
-		}
-		for (row = 1; row < 3; row++)
-		{
-			if (Board[row][0] != '-')
+			else if (col == 1)
 			{
-				temp = Board[row][0];
-				if (row == 1)
-				{
-					if (Board[1][1] == temp)
-						if (Board[1][2] == temp)
-							return temp;
-				}
-				else
-				{
+				if (Board[1][1] == temp)
 					if (Board[2][1] == temp)
-						if (Board[2][2] == temp)
-							return temp;
-					if (Board[1][1] == temp)
-						if (Board[0][2] == temp)
-							return temp;
-				}
+						return temp;
+			}
+			else
+			{
+				if (Board[1][2] == temp)
+					if (Board[2][2] == temp)
+						return temp;
 			}
 		}
-
-		return 'f';
-
 	}
+	for (row = 1; row < 3; row++)
+	{
+		if (Board[row][0] != '-')
+		{
+			temp = Board[row][0];
+			if (row == 1)
+			{
+				if (Board[1][1] == temp)
+					if (Board[1][2] == temp)
+						return temp;
+			}
+			else
+			{
+				if (Board[2][1] == temp)
+					if (Board[2][2] == temp)
+						return temp;
+				if (Board[1][1] == temp)
+					if (Board[0][2] == temp)
+						return temp;
+			}
+		}
+	}
+
+	return 'f';
+
+}
