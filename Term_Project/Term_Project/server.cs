@@ -7,7 +7,7 @@ using System.Net.Sockets;
 
 namespace Term_ProjectServer
 {
-   class server
+   class Server
    {
       //Local Variables
       public static int MaxPlayers { get; private set; }
@@ -73,7 +73,7 @@ namespace Term_ProjectServer
 
          packetHandlers = new Dictionary<int, PacketHandler>()
          {
-            { (int)ClientPackets.welcomeReceived, server.WelcomeRecieved } //Weird formatting, but needed.
+            { (int)ClientPackets.welcomeReceived, Server.WelcomeRecieved } //Weird formatting, but needed.
          }; //Initialize it to the values above.
 
          //For debugging / to make sure program does right things in general.

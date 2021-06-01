@@ -10,7 +10,7 @@ namespace Term_ProjectServer
     {
         public static void Update()
         {
-            foreach(Client client in server.clients.Values)
+            foreach(Client client in Server.clients.Values)
             {
                 if(client.player != null)
                 {

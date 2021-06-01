@@ -21,15 +21,15 @@ namespace Term_ProjectServer
       private static void SendTCPData(int toClient, Packet packet)
       {
          packet.WriteLength();
-         server.clients[toClient].tcp.SendData(packet);
+         Server.clients[toClient].tcp.SendData(packet);
       }
 
       private static void SendTCPDataToAllClients(Packet packet) //One spicy function name.
       {
          packet.WriteLength();
-         for (int i = 0; i <= server.MaxPlayers; i++)
+         for (int i = 0; i <= Server.MaxPlayers; i++)
          {
-            server.clients[i].tcp.SendData(packet);
+            Server.clients[i].tcp.SendData(packet);
          }
       }
       public static void SpawnPlayer(int _toClient, Player _player)
@@ -47,11 +47,11 @@ namespace Term_ProjectServer
       public static void SendTCPDataToAllClientsExcept(int client, Packet packet) //Part 2: return of the spicy function names.
       {
          packet.WriteLength();
-         for (int i = 0; i <= server.MaxPlayers; i++)
+         for (int i = 0; i <= Server.MaxPlayers; i++)
          {
-            if(server.clients[i].id != client)
+            if(Server.clients[i].id != client)
             {
-               server.clients[i].tcp.SendData(packet);
+               Server.clients[i].tcp.SendData(packet);
             }
          }
       }
