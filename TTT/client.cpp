@@ -163,5 +163,99 @@ int main(int argc, char* argv[]) {
 		}
 
 	}
+	
+	//Whichever player is X will get to go first
+	if (serv_choice == 'X')
+	{
+		inp = 1;
+		cout << sname << " will play first." << endl << endl;
+
+	}
+	else
+	{
+		inp = 2;
+		cout << "You will play first." << endl << endl;
+	}
+
+
+	init();
+	cout << endl << "Starting Game..." << endl;
+	sleep(3);
+	display();
+	//Game officially starts. Loops till all moves are made, or player creates a line of three
+	while (count < 9)
+	{
+		memset(&co_ordinates_buffer, 0, sizeof(co_ordinates_buffer));
+
+		if (inp % 2 != 0)
+		{
+			cout << endl << sname << "'s turn. Please wait..." << endl;
+			bytes_recvd = recv(sockfd, &co_ordinates_buffer, sizeof(co_ordinates_buffer), 0);
+			if (bytes_recvd == -1)
+			{
+				perror("CO-ORDINATES BUFFER not recieved!");
+				return 1;
+			}
+			x = co_ordinates_buffer[0] - '0';
+			y = co_ordinates_buffer[1] - '0';
+			ni = input(serv_choice, x, y);
+			if (ni == 0)
+			{
+				inp++;
+				cout << endl << sname << " has played. Updating Matrix..." << endl;
+			}
+		}
+		else
+		{
+			cout << endl << "Your turn. Enter co-ordinates separated by a space : ";
+			cin >> x >> y;
+			ni = input(cli_choice, x, y);
+			if (ni == 0)
+			{
+				inp++;
+				sprintf(&co_ordinates_buffer[0], "%d", x);
+				sprintf(&co_ordinates_buffer[1], "%d", y);
+				cout << endl << "Updating Matrix..." << endl;
+
+				bytes_sent = send(sockfd, &co_ordinates_buffer, sizeof(co_ordinates_buffer), 0);
+				if (bytes_sent == -1)
+				{
+					perror("CO-ORDINATES BUFFER could not be sent!");
+					return 1;
+				}
+			}
+		}
+
+		count++;
+		sleep(2);
+		system("clear");
+		display();
+		//If player makes match then game ends and the winning player is congradulated
+		if (count >= 5)
+		{
+			nc = check();
+			if (nc == 'f')
+				continue;
+			else if (serv_choice == nc)
+			{
+				cout << endl << "You loose." << endl << sname << " has won." << endl;
+				break;
+			}
+			else if (cli_choice == nc)
+			{
+				cout << endl << "Congrats! You have won!!!" << endl << sname << " lost." << endl;
+				break;
+			}
+		}
+		//If game isn't over it loops back to the top
+
+	}
+	//If there is a draw both players are notified
+	if (nc == 'f')
+		cout << endl << "Game ends in a draw." << endl;
+
+	cout << endl << "Thank You for playing Tic-tac-Toe" << endl;
+	close(sockfd);
+	return 0;
   
   }
