@@ -15,12 +15,7 @@
 #include <string>         //string
 #include <pthread.h>      //Pthread
 #include <iostream>
-
-//Message Structure
-struct message {
-    std::string purpose;
-    std::string details;
-};
+#include "TTT.h"
 
 //Function Prototype
 void* ConnectionProcessor(void* socket);
@@ -167,9 +162,10 @@ int main(int argc, char* argv[]) {
     }
     write(newSd, &messageHandler, sizeof(messageHandler));
 
-    //This is the begining of the server version of the game code ---------------------------------
-        //include these at the top
-        string inputs, servName, first;
+    //Done by Carson Riland.
+    //This is the beginning of the server version of the game code ---------------------------------
+    //include these at the top
+    std::string inputs, servName, first;
 	int count = 0;
 	int inp, x, y, ni, toss;
 	int	inp_true = 0;
@@ -177,13 +173,13 @@ int main(int argc, char* argv[]) {
 
     if (messageHandler.details == "client")
 	{//If the server player wins they get to choose to be X or O
-		cout << endl << sname << " Server goes first!" << endl;
-		cout << /*client name goes here*/ << " is choosing. Please wait..." << endl << endl;
+		std::cout << std::endl << serverName << " Server goes first!" << std::endl;
+        std::cout << clientName << " is choosing. Please wait..." << std::endl << std::endl;
 		//Client waits to receive server choice
-		read(sockfd, &messageHandler, 100);
+		read(newSd, &messageHandler, 100);
                 if(!checkClientResponse(messageHandler, "FIRSTCHOICE")){
-                close(sockfd);
-                cout << endl << "Server did not send correct response.":
+                close(newSd);
+                    std::cout << std::endl << "Server did not send correct response.";
                 return 1;
                 }
 
@@ -194,24 +190,24 @@ int main(int argc, char* argv[]) {
                 serv_choice = 'O';
 		cli_choice = 'X';
                 }
-		cout << /*client name*/ << " has chosen " << cli_choice << endl << endl << "You will play with " << serv_choice << endl;
-		cout << endl << "Lets Play!" << endl << endl;
+        std::cout << clientName << " has chosen " << cli_choice << std::endl << std::endl << "You will play with " << serv_choice << std::endl;
+        std::cout << std::endl << "Lets Play!" << std::endl << std::endl;
 		
 	}
 	else
 	{//If player wins the toss they get to go choose to be X or O
-		cout << endl << "You pick first!" << endl;
+        std::cout << std::endl << "You pick first!" << std::endl;
 		do
 		{
-			cout << /*server name*/ << " Enter your Choice (X or O): ";
-			cin >> serv_choice;
+            std::cout << serverName << " Enter your Choice (X or O): ";
+            std::cin >> serv_choice;
 			if (serv_choice == 'O' || serv_choice == 'o')
 			{
 				serv_choice = 'O';
 				cli_choice = 'X';
-                                messageHandler.details = "O"
+                messageHandler.details = "O";
 				inp_true = 1;
-				cout << endl << /*client name*/ << " gets X." << endl << endl << "Lets Play!" << endl << endl;
+                std::cout << std::endl << clientName << " gets X." << std::endl << std::endl << "Lets Play!" << std::endl << std::endl;
 			}
 			else if (serv_choice == 'X' || serv_choice == 'x' || serv_choice == 'X')
 			{
@@ -219,40 +215,40 @@ int main(int argc, char* argv[]) {
 				cli_choice = 'O';
                                 messageHandler.details = "O";
 				inp_true = 1;
-				cout << endl << /*clients name*/ << " gets O." << endl << endl << "Lets Play!" << endl << endl;
+                std::cout << std::endl << clientName << " gets O." << std::endl << std::endl << "Lets Play!" << std::endl << std::endl;
 			}
 			else
 			{
-				cout << "\nInvalid Choice! Please Choose Again..." << endl;
+                std::cout << "\nInvalid Choice! Please Choose Again..." << std::endl;
 				inp_true == 0;
 			}
 		} while (inp_true == 0);
 		//After valid first choice is made between X and O, hte info is sent to the server/client
                 
 		messageHandler.purpose = "FIRSTCHOICE";
-                write(sockfd, &messageHandler, sizeof(messageHandler));
+                write(newSd, &messageHandler, sizeof(messageHandler));
 
 	}
 	//Whichever player is X will get to go first
 	if (cli_choice == 'X')
 	{
 		inp = 1;
-		cout << sname << " will play first." << endl << endl;
+        std::cout << serverName << " will play first." << std::endl << std::endl;
 
 	}
 	else
 	{
 		inp = 2;
-		cout << "You will play first." << endl << endl;
+        std::cout << "You will play first." << std::endl << std::endl;
 	}
 
 
 	init();
-	cout << endl << "Starting Game..." << endl;
+    std::cout << std::endl << "Starting Game..." << std::endl;
 	sleep(3);
 	display();
 	//Game officially starts. Loops till all moves are made, or player creates a line of three
-        string xStr, yStr;
+    std::string xStr, yStr;
         messageHandler.purpose = "TURNS";
 	while (count < 9)
 	{
@@ -260,37 +256,37 @@ int main(int argc, char* argv[]) {
 
 		if (inp % 2 != 0)
 		{
-			cout << endl << /*clients name*/ << "'s turn. Please wait..." << endl;
-			read(sockfd, &messageHandler, 100);
+            std::cout << std::endl << clientName << "'s turn. Please wait..." << std::endl;
+			read(newSd, &messageHandler, 100);
 			if(!checkClientResponse(messageHandler, "TURNS")){
-                        close(sockfd);
-                        cout << endl << "Server did not send correct response.":
-                        return 1;
-                        }
-                        xStr = messageHandler.details[0];
-                        yStr = messageHandler.details[2];
+                close(newSd);
+                std::cout << std::endl << "Server did not send correct response.";
+                return 1;
+            }
+            xStr = messageHandler.details[0];
+            yStr = messageHandler.details[2];
 			x = std::stoi(xStr);
 			y = std::stoi(yStr);
 			ni = input(cli_choice, x, y);
 			if (ni == 0)
 			{
 				inp++;
-				cout << endl << sname << " has played. Updating Matrix..." << endl;
+                std::cout << std::endl << serverName << " has played. Updating Matrix..." << std::endl;
 			}
 		}
 		else
 		{ //Else portion has been changed
-			cout << endl << "Your turn. Enter co-ordinates separated by a space : ";
-			cin >> x >> y;
+            std::cout << std::endl << "Your turn. Enter co-ordinates separated by a space : ";
+            std::cin >> x >> y;
 			ni = input(serv_choice, x, y);
 			if (ni == 0)
 			{
 				inp++;
-				messageHandler.details = to_string(x) + " " + to_string(y); //convert input into string to send message
-        
-				cout << endl << "Updating Matrix..." << endl;
+				messageHandler.details = std::to_string(x) + " " + std::to_string(y); //convert input into string to send message
 
-				write(sockfd, &messageHandler, sizeof(messageHandler));
+                std::cout << std::endl << "Updating Matrix..." << std::endl;
+
+				write(newSd, &messageHandler, sizeof(messageHandler));
 			}
 		}
 
@@ -306,12 +302,12 @@ int main(int argc, char* argv[]) {
 				continue;
 			else if (serv_choice == nc)
 			{
-				cout << endl << "You loose." << endl << sname << " has won." << endl;
+                std::cout << std::endl << "You loose." << std::endl << serverName << " has won." << std::endl;
 				break;
 			}
 			else if (cli_choice == nc)
 			{
-				cout << endl << "Congrats! You have won!!!" << endl << sname << " lost." << endl;
+                std::cout << std::endl << "Congrats! You have won!!!" << std::endl << serverName << " lost." << std::endl;
 				break;
 			}
 		}
@@ -320,16 +316,14 @@ int main(int argc, char* argv[]) {
 	}
 	//If there is a draw both players are notified
 	if (nc == 'f')
-		cout << endl << "Game ends in a draw." << endl;
+        std::cout << std::endl << "Game ends in a draw." << std::endl;
 
 
-	cout << endl << "Thank You for playing Tic-tac-Toe" << endl;
-	close(sockfd);
+    std::cout << std::endl << "Thank You for playing Tic-tac-Toe" << std::endl;
+	close(newSd);
 
 	return 0;
-
 }
-
 
 //Check client response, if client response is bad (unexpected) the program reports and ends.
 bool checkClientResponse(message message, std::string expected) {
