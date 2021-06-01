@@ -10,6 +10,12 @@ void display();
 int input(char input, int row, int col);
 char check();
 
+//Message Structure, used for the protocol to communicate between client and server.
+struct message {
+    std::string purpose;
+    std::string details;
+};
+
 //initialize the Tic-Tac-Toe Board (-)
 void init()
 {
