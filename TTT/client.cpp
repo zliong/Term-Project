@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
 
 	//Testing if correct arguments were used testing
 	if (argc != 2) {
-	     	perror("Incomplete arguments passed in.")
+	     	perror("Incomplete arguments passed in.");
 			return 1;
 	}
 	//Checks to see if host exists
