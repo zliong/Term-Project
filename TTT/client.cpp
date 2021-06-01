@@ -10,7 +10,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
-#include "tictac.h"
+#include "TTT.h"
 #define  PORT "9987"
 
 using namespace std;
@@ -259,3 +259,4 @@ int main(int argc, char* argv[]) {
 	return 0;
   
   }
+}
