@@ -1,19 +1,18 @@
 /* This is the client side code to connect to a tic-tac-toe game server.
- *
  */
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <time.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <unistd.h>    // read, write, close
 #include <arpa/inet.h>
 #include "TTT.h"
-#define  PORT "8080"
+#define  PORT "9987"
 
 using namespace std;
 
@@ -36,8 +35,8 @@ int main(int argc, char* argv[]) {
 
 	//Testing if correct arguments were used testing
 	if (argc != 2) {
-		perror("Incomplete arguments passed in.");
-		return 1;
+	     	perror("Incomplete arguments passed in.");
+			return 1;
 	}
 	//Checks to see if host exists
 	port_no = atoi(ptr_port);
@@ -48,7 +47,7 @@ int main(int argc, char* argv[]) {
 	}
 	//Attempts to create socket
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (sockfd < 0) {
+	if (sockfd == -1) {
 		perror("The socket couldn't be created.");
 		return 1;
 	}
@@ -64,10 +63,11 @@ int main(int argc, char* argv[]) {
 		perror("Sorry. Could not connect to server.");
 		return 1;
 	}
+         
 	//If connected user prompted with name choice
 	cout << "Enter your name : ";
 	cin >> cname;
-	do
+	do//This is where the JOIN part of the requirement will be implimented
 	{
 		//Checks to see if player data can be sent
 		static int flag = 0;
@@ -164,6 +164,7 @@ int main(int argc, char* argv[]) {
 		}
 
 	}
+	
 	//Whichever player is X will get to go first
 	if (serv_choice == 'X')
 	{
@@ -257,5 +258,6 @@ int main(int argc, char* argv[]) {
 	cout << endl << "Thank You for playing Tic-tac-Toe" << endl;
 	close(sockfd);
 	return 0;
+  
+  }
 }
-
