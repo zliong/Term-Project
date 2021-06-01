@@ -21,7 +21,7 @@ public class Client : MonoBehaviour
 
     private void Awake()
     {
-        if (instance = null)
+        if (instance == null)
         {
             instance = this;
         }
