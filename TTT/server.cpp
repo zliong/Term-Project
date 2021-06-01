@@ -35,13 +35,13 @@ int main(int argc, char* argv[]) {
     message messageHandler;
 
     //Improvement to make the program more user-friendly.
-    try {
+    if(argc < 1) {
+        std::cout << "Error occurred: bad port number argument.\n";
+    }
+    else {
         port = atoi(argv[1]);
     }
-    catch (std::exception e) {
-        std::cout << "Error occurred: bad port number argument.\n";
-        return -1;
-    }
+
     sockaddr_in acceptSock;
     const int on = 1;
     sockaddr_in newsock;
