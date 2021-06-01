@@ -128,26 +128,5 @@ bool checkClientResponse(message message, std::string expected) {
 }
 
 void* ConnectionProcessor(void* socket) {
-    //Local Variables
-    timeval startTime;
-    timeval endTime;
-    connectionProcessorData* data = (connectionProcessorData*)(input);
-    int count = 0;
-
-    //Allocate databuf[BUFSIZE]
-    char databuf[BUFFERSIZE];
-
-    //Start a timer by calling gettimeofday.
-    gettimeofday(&startTime, NULL);
-
-    //Repeat reading data from the client into databuf[BUFSIZE].
-    for(int i =0; i < data->repetition; i++) {
-        for ( int nRead = 0;
-              (nRead += read(data->socket, databuf, BUFFERSIZE - nRead)) < BUFFERSIZE;
-              ++count );
-        count++;
-    }
-
-
     return 0;
 }
