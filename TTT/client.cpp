@@ -12,11 +12,19 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "TTT.h"
+#include "server.cpp
 #define  PORT "9987"
 
 using namespace std;
 
-int main(int argc, char* argv[]) {
+bool checkServerResponse(message message, std::string expected) {
+    if(message.purpose != expected) {
+        return false;
+    }
+    return true;
+}
+
+int main(int argc, char* argv[]){
 
 	int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
 	char cbuffer[512], sname[64], cname[64];
@@ -24,7 +32,8 @@ int main(int argc, char* argv[]) {
 	char* ptr_port = (char*)&PORT;
 	struct sockaddr_in serv_addr;
 	struct hostent* host;
-
+ 
+        string inputs, servName;
 	int count = 0;
 	int inp, x, y, ni, toss;
 	int	inp_true = 0;
@@ -63,10 +72,43 @@ int main(int argc, char* argv[]) {
 		perror("Sorry. Could not connect to server.");
 		return 1;
 	}
-         
 	//If connected user prompted with name choice
 	cout << "Enter your name : ";
 	cin >> cname;
+      
+
+        
+        message messageHandler;
+        read(sockfd, &messageHandler, 100);
+        if(!checkServerResponse(messageHandler, "USERNAMEQUERY")){
+            close(sockfd);
+            cout << endl << "Server did not send correct response.":
+            return 1;
+        }
+        messageHandler.purpose = "USERNAMEQUERY";
+        servName = messageHandler.details;
+        messageHandler.details = cname;//might need to change to string
+        write(sockfd, &messageHandler, sizeof(messageHandler));
+
+        read(sockfd, &messageHandler, 100);
+        if(!checkServerResponse(messageHandler, "READYCHECK")){
+            close(sockfd);
+            cout << endl << "Server did not send correct response.":
+            return 1;
+        }
+        messageHandler.purpose = "READYCHECK";
+        cout << endl << servName << " is ready to play tic tac toe, are you? [yes/no]: "
+        cin >> inputs;
+        cout << endl << endl;
+        messageHandler.details = inputs;//might need to change to string
+        write(sockfd, &messageHandler, sizeof(messageHandler));
+
+
+/*
+
+
+
+
 	do//This is where the JOIN part of the requirement will be implimented
 	{
 		//Checks to see if player data can be sent
@@ -164,7 +206,6 @@ int main(int argc, char* argv[]) {
 		}
 
 	}
-	
 	//Whichever player is X will get to go first
 	if (serv_choice == 'X')
 	{
@@ -255,9 +296,10 @@ int main(int argc, char* argv[]) {
 	if (nc == 'f')
 		cout << endl << "Game ends in a draw." << endl;
 
+*/
 	cout << endl << "Thank You for playing Tic-tac-Toe" << endl;
 	close(sockfd);
+
 	return 0;
-  
-  }
 }
+
