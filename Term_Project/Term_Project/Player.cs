@@ -50,15 +50,26 @@ namespace Term_ProjectServer
             //Move(inputDirection);
         }
 
-        //public void Move(Vector2 input)
-        //{
-            //Vector3 forward = Vector3.Transform(new Vector3(0, 0, 1), player_rotation);
-            //Vector3 right = Vector3.Normalize(Vector3.Cross(forward, new Vector3(0, 1, 0)));
+      
+        public void Move(Vector2 input)
+        {
+        Vector3 forward = Vector3.Transform(new Vector3(0, 0, 1), player_rotation);
+        Vector3 right = Vector3.Normalize(Vector3.Cross(forward, new Vector3(0, 1, 0)));
 
-            //Vector3 moveDirection = right * input.X + forward * input.Y;
-            //player_pos += moveDirection * moveSpeed;
+        Vector3 moveDirection = right * input.X + forward * input.Y;
+        player_pos += moveDirection * moveSpeed;
 
-            
-        //}
+            ServerSend.PlayerPosition(this);
+            ServerSend.PlayerRotation(this);
+        }
+
+        /// <summary>Updates the player input with newly received input.</summary>
+        /// <param name="_inputs">The new key inputs.</param>
+        /// <param name="_rotation">The new rotation.</param>
+        public void SetInput(bool[] _inputs, Quaternion _rotation)
+        {
+            inputs = _inputs;
+            player_rotation = _rotation;
+        }
     }
 }
