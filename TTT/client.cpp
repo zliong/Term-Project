@@ -1,6 +1,7 @@
 /* This is the client side code to connect to a tic-tac-toe game server.
  */
 #include <iostream>
+#include <string>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -12,15 +13,10 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "TTT.h"
+#include "server.cpp
 #define  PORT "9987"
 
 using namespace std;
-
-//Message Structure
-struct message {
-    std::string purpose;
-    std::string details;
-};
 
 bool checkServerResponse(message message, std::string expected) {
     if(message.purpose != expected) {
@@ -38,7 +34,7 @@ int main(int argc, char* argv[]){
 	struct sockaddr_in serv_addr;
 	struct hostent* host;
  
-        string inputs, servName;
+        string inputs, servName, first;
 	int count = 0;
 	int inp, x, y, ni, toss;
 	int	inp_true = 0;
@@ -87,7 +83,7 @@ int main(int argc, char* argv[]){
         read(sockfd, &messageHandler, 100);
         if(!checkServerResponse(messageHandler, "USERNAMEQUERY")){
             close(sockfd);
-            cout << endl << "Server did not send correct response.";
+            cout << endl << "Server did not send correct response.":
             return 1;
         }
         messageHandler.purpose = "USERNAMEQUERY";
@@ -98,11 +94,11 @@ int main(int argc, char* argv[]){
         read(sockfd, &messageHandler, 100);
         if(!checkServerResponse(messageHandler, "READYCHECK")){
             close(sockfd);
-            cout << endl << "Server did not send correct response.";
+            cout << endl << "Server did not send correct response.":
             return 1;
         }
         messageHandler.purpose = "READYCHECK";
-        cout << endl << servName << " is ready to play tic tac toe, are you? [yes/no]: ";
+        cout << endl << servName << " is ready to play tic tac toe, are you? [yes/no]: "
         cin >> inputs;
         cout << endl << endl;
         messageHandler.details = inputs;//might need to change to string
@@ -112,9 +108,16 @@ int main(int argc, char* argv[]){
         sleep(2);
         cout << endl << "Game created!" << endl;
         cout << "You have joined " << servName << "'s game!" << endl;
+
+
+
+
+
+	//whoisfirst goes here
+        
 	
-        //who first starts here
 	
+
 	
 	if (first == "server")
 	{//If the server player wins they get to choose to be X or O
@@ -124,7 +127,7 @@ int main(int argc, char* argv[]){
 		read(sockfd, &messageHandler, 100);
                 if(!checkServerResponse(messageHandler, "FIRSTCHOICE")){
                 close(sockfd);
-                cout << endl << "Server did not send correct response.";
+                cout << endl << "Server did not send correct response.":
                 return 1;
                 }
 
@@ -150,7 +153,7 @@ int main(int argc, char* argv[]){
 			{
 				serv_choice = 'O';
 				cli_choice = 'X';
-                messageHandler.details = "X";
+                                messageHandler.details = "X"
 				inp_true = 1;
 				cout << endl << servName << " gets O." << endl << endl << "Lets Play!" << endl << endl;
 			}
@@ -188,8 +191,8 @@ int main(int argc, char* argv[]){
 		inp = 2;
 		cout << "You will play first." << endl << endl;
 	}
-	
-	
+
+
 	init();
 	cout << endl << "Starting Game..." << endl;
 	sleep(3);
