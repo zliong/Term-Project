@@ -70,7 +70,7 @@ namespace Term_ProjectServer
                int _byteLength = stream.EndRead(_result);
                if (_byteLength <= 0)
                {
-                  server.clients[id].Disconnect();
+                  Server.clients[id].Disconnect();
                   return;
                }
 
@@ -85,7 +85,7 @@ namespace Term_ProjectServer
             catch (Exception _ex)
             {
                Console.WriteLine($"Error receiving TCP data: { _ex}");
-               server.clients[id].Disconnect();
+               Server.clients[id].Disconnect();
 
             }
          }
@@ -104,7 +104,14 @@ namespace Term_ProjectServer
             while(packetSize > 0 && packetSize <= receivedData.UnreadLength())
             {
                byte[] packetData = receivedData.ReadBytes(packetSize);
-               //TODO: thread stuff here.
+               ThreadManager.ExecuteOnMainThread(() =>
+               {
+                  using (Packet packet = new Packet(packetData))
+                  {
+                     int packetID = packet.ReadInt();
+                     server.packetHandlers[packetID](id, packet);
+                  }
+               });
 
                //Retry test above.
                packetSize = 0;
@@ -136,7 +143,7 @@ namespace Term_ProjectServer
       public void SendIntoGame(string player_name)
       {
          player = new Player(id, player_name, new Vector3(0, 0, 0));
-            foreach (Client client in server.clients.Values)
+            foreach (Client client in Server.clients.Values)
             {
                 if(client.player != null)
                 {
