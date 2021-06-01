@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
     std::cout << "Beginning to watch for another player!\n";
 
     int newSd = accept(serverSd, (sockaddr*)&newsock, &newsockSize);
-    std::cout << "Got a client to play tic tac toe with!";
+    std::cout << "Got a client to play tic tac toe with!\n";
 
     //Create new thread for chat message getting.
     //pthread_t thread;
