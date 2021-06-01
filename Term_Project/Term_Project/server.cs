@@ -79,5 +79,18 @@ namespace Term_ProjectServer
          //For debugging / to make sure program does right things in general.
          Console.WriteLine("Finished setting up the server's data.");
       }
+      
+      
+        public static void PlayerMovement(int _fromClient, Packet _packet)//just added
+        {
+            bool[] _inputs = new bool[_packet.ReadInt()];
+            for (int i = 0; i < _inputs.Length; i++)
+            {
+                _inputs[i] = _packet.ReadBool();
+            }
+            Quaternion _rotation = _packet.ReadQuaternion();
+
+            Server.clients[_fromClient].player.SetInput(_inputs, _rotation);
+        }
    }
 }
