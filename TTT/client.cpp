@@ -5,6 +5,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <time.h>
+#include <unistd.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
