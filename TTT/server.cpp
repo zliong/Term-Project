@@ -35,8 +35,9 @@ int main(int argc, char* argv[]) {
     message messageHandler;
 
     //Improvement to make the program more user-friendly.
-    if(argc < 1) {
+    if(argc < 2) {
         std::cout << "Error occurred: bad port number argument.\n";
+        return -1;
     }
     else {
         port = atoi(argv[1]);
