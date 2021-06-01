@@ -28,9 +28,9 @@ void display()
 	int row, col;
 	system("clear"); //clear the console
 	cout << "Welcome to Tic-Tac-Toe Game!\n\nThe Grid Coordinates (x,y):" << endl << endl;
+	cout << "Here's the possible commands that user can input (Don't have comma in between x and y): " << endl;
 	for (row = 0; row < 3; row++)
 	{
-		cout << "\t";
 		for (col = 0; col < 3; col++)
 		{
 			cout << "[x,y] = " << row << " " << col << "     " << endl;
@@ -39,9 +39,11 @@ void display()
 	cout << " \nThe Current Tic-Tac-Toe Board: " << endl;
 	for (row = 0; row < 3; row++)
 	{
-		cout << "\t";
 		for (col = 0; col < 3; col++)
-			cout << " " << Board[row][col] << "     " << endl;
+		{
+			cout << "||" << Board[row][col] << "||";
+		}
+		cout << endl;
 	}
 }
 
