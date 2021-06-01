@@ -13,7 +13,6 @@
 #include <netdb.h>
 #include <arpa/inet.h>
 #include "TTT.h"
-#include "server.cpp
 #define  PORT "9987"
 
 using namespace std;
@@ -83,7 +82,7 @@ int main(int argc, char* argv[]){
         read(sockfd, &messageHandler, 100);
         if(!checkServerResponse(messageHandler, "USERNAMEQUERY")){
             close(sockfd);
-            cout << endl << "Server did not send correct response.":
+            cout << endl << "Server did not send correct response.";
             return 1;
         }
         messageHandler.purpose = "USERNAMEQUERY";
@@ -94,11 +93,11 @@ int main(int argc, char* argv[]){
         read(sockfd, &messageHandler, 100);
         if(!checkServerResponse(messageHandler, "READYCHECK")){
             close(sockfd);
-            cout << endl << "Server did not send correct response.":
+            cout << endl << "Server did not send correct response.";
             return 1;
         }
         messageHandler.purpose = "READYCHECK";
-        cout << endl << servName << " is ready to play tic tac toe, are you? [yes/no]: "
+        cout << endl << servName << " is ready to play tic tac toe, are you? [yes/no]: ";
         cin >> inputs;
         cout << endl << endl;
         messageHandler.details = inputs;//might need to change to string
@@ -127,7 +126,7 @@ int main(int argc, char* argv[]){
 		read(sockfd, &messageHandler, 100);
                 if(!checkServerResponse(messageHandler, "FIRSTCHOICE")){
                 close(sockfd);
-                cout << endl << "Server did not send correct response.":
+                cout << endl << "Server did not send correct response.";
                 return 1;
                 }
 
@@ -153,7 +152,7 @@ int main(int argc, char* argv[]){
 			{
 				serv_choice = 'O';
 				cli_choice = 'X';
-                                messageHandler.details = "X"
+                messageHandler.details = "X";
 				inp_true = 1;
 				cout << endl << servName << " gets O." << endl << endl << "Lets Play!" << endl << endl;
 			}
@@ -210,7 +209,7 @@ int main(int argc, char* argv[]){
 			read(sockfd, &messageHandler, 100);
 			if(!checkServerResponse(messageHandler, "TURNS")){
                         close(sockfd);
-                        cout << endl << "Server did not send correct response.":
+                        cout << endl << "Server did not send correct response.";
                         return 1;
                         }
                         xStr = messageHandler.details[0];
