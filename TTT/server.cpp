@@ -90,6 +90,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     clientName = messageHandler.purpose;
+    std::cout << "Your opponent is " << clientName << '.';
 
     //Send message seeing if they're ready to play.
     messageHandler.purpose = "READYCHECK";
