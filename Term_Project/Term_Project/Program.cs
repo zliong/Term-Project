@@ -8,7 +8,7 @@ namespace Term_ProjectServer
         {
             Console.Title = "Game Server";
 
-            server.Start(50, 25568);
+            Server.Start(50, 25568);
 
             Console.ReadKey();
         }

@@ -8,19 +8,19 @@
     "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\WuckFindows\\.nuget\\packages\\": {}
+    "C:\\Users\\Kai\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\WuckFindows\\Documents\\GitHub\\Term-Project\\Term_Project\\Term_Project\\Term_ProjectServer.csproj",
+      "projectUniqueName": "C:\\Users\\Kai\\Documents\\GitHub\\Term-Project\\Term_Project\\Term_Project\\Term_ProjectServer.csproj",
       "projectName": "Term_ProjectServer",
-      "projectPath": "C:\\Users\\WuckFindows\\Documents\\GitHub\\Term-Project\\Term_Project\\Term_Project\\Term_ProjectServer.csproj",
-      "packagesPath": "C:\\Users\\WuckFindows\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\WuckFindows\\Documents\\GitHub\\Term-Project\\Term_Project\\Term_Project\\obj\\",
+      "projectPath": "C:\\Users\\Kai\\Documents\\GitHub\\Term-Project\\Term_Project\\Term_Project\\Term_ProjectServer.csproj",
+      "packagesPath": "C:\\Users\\Kai\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Kai\\Documents\\GitHub\\Term-Project\\Term_Project\\Term_Project\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\WuckFindows\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Kai\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -60,7 +60,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.300\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }
