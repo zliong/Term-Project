@@ -28,6 +28,8 @@ bool checkClientResponse(message message, std::string expected);
 int main(int argc, char* argv[]) {
     //Local Variables
     int port;
+    std::string serverName = "The original, epic, truly amazing... Server 1.";
+    std::string clientName;
     std::string chat;
     std::string input;
     message messageHandler;
@@ -73,6 +75,20 @@ int main(int argc, char* argv[]) {
     //pthread_create(&thread, nullptr, ConnectionProcessor, (void*) newSd);
 
     //Move on now, work on getting this game going!
+    //Who are we playing?
+    messageHandler.purpose = "USERNAMEQUERY ";
+    messageHandler.details = serverName;
+    write(newSd, &messageHandler, sizeof(messageHandler));
+
+    //Get response
+    read(newSd, &messageHandler, 100); //TODO: set to a good number.
+    if (!checkClientResponse(messageHandler, "USERNAMEQUERY")) {
+        close(newSd);
+        std::cout << "The client did not have an expected response. Closing.\n";
+        return -1;
+    }
+    clientName = messageHandler.purpose;
+
     //Send message seeing if they're ready to play.
     messageHandler.purpose = "READYCHECK";
     messageHandler.details = nullptr;
