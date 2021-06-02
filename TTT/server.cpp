@@ -267,10 +267,10 @@ int main(int argc, char* argv[]) {
     display();
     //Game officially starts. Loops till all moves are made, or player creates a line of three
     std::string xStr, yStr;
-    messageBuilder = "TURNS:";
+
     while (count < 9)
     {
-
+        messageBuilder = "TURNS:";
 
         if (inp % 2 != 0)
         {
