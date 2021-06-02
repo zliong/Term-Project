@@ -101,7 +101,38 @@ int main(int argc, char* argv[]) {
             return -1;
         }
     }
+/*
+    //We're ready to play, choose a side.
+    messageHandler.purpose = "WHOFIRST";
+    messageHandler.details = "1 10";
+    write(newSd, &messageHandler, sizeof(messageHandler));
 
+    //Get from us our number.
+    std::cout << "Pick a number between 1 and 10 (inclusive).\n";
+    std::cin >> userInput;
+
+    //Get client response.
+    read(newSd, &messageHandler, 100); //TODO: set to a good number.
+    if (!checkClientResponse(messageHandler, "WHOFIRST")) {
+        close(newSd);
+        std::cout << "The client did not have an expected response. Closing.\n";
+        return -1;
+    }
+    
+    //Compare number, say who's going first.
+    messageHandler.purpose = "WHOFIRST";
+    if(stoi(userInput) > stoi(messageHandler.details)) {
+        std::cout << "You go first.\n";
+        messageHandler.details = "server";
+    }
+    else {
+        std::cout << "Client goes first.\n";
+        messageHandler.details = "client";
+    }
+    write(newSd, &messageHandler, sizeof(messageHandler));
+*/
+    //Done by Carson Riland.
+    //My new code for the game with edits and notes for server implementation
     //We're ready to play, choose a side.
     messageHandler.purpose = "WHOFIRST";
     messageHandler.details = "1 10";
@@ -131,38 +162,6 @@ int main(int argc, char* argv[]) {
     }
     write(newSd, &messageHandler, sizeof(messageHandler));
 
-    
-    //My new code for the game with edits and notes for server implimentation
-       //We're ready to play, choose a side.
-    messageHandler.purpose = "WHOFIRST";
-    messageHandler.details = "1 10";
-    write(newSd, &messageHandler, sizeof(messageHandler));
-
-    //Get from us our number.
-    std::cout << "Pick a number between 1 and 10 (inclusive).\n";
-    std::cin >> userInput;
-
-    //Get client response.
-    read(newSd, &messageHandler, 100); //TODO: set to a good number.
-    if (!checkClientResponse(messageHandler, "WHOFIRST")) {
-        close(newSd);
-        std::cout << "The client did not have an expected response. Closing.\n";
-        return -1;
-    }
-    
-    //Compare number, say who's going first.
-    messageHandler.purpose = "WHOFIRST";
-    if(stoi(userInput) > stoi(messageHandler.details)) {
-        std::cout << "You go first.\n";
-        messageHandler.details = "server";
-    }
-    else {
-        std::cout << "Client goes first.\n";
-        messageHandler.details = "client";
-    }
-    write(newSd, &messageHandler, sizeof(messageHandler));
-
-    //Done by Carson Riland.
     //This is the beginning of the server version of the game code ---------------------------------
     //include these at the top
     std::string inputs, servName, first;
