@@ -212,9 +212,10 @@ int main(int argc, char* argv[]) {
 	display();
 	//Game officially starts. Loops till all moves are made, or player creates a line of three
 	string xStr, yStr;
-	messageBuilder = "TURNS:";
+
 	while (count < 9)
 	{
+        messageBuilder = "TURNS:";
 		memset(&co_ordinates_buffer, 0, sizeof(co_ordinates_buffer));
 
 		if (inp % 2 != 0)
@@ -245,7 +246,7 @@ int main(int argc, char* argv[]) {
 			if (ni == 0)
 			{
 				inp++;
-				getMessageDetail(message) = to_string(x) + " " + to_string(y); //convert input into string to send message
+				messageBuilder += to_string(x) + " " + to_string(y); //convert input into string to send message
 
 				cout << endl << "Updating Matrix..." << endl;
 
