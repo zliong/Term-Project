@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     std::string serverName = "The original, epic, truly amazing... Server 1.";
     std::string clientName;
     std::string chat;
-    std::string input;
+    std::string userInput;
     message messageHandler;
 
     //Improvement to make the program more user-friendly.
@@ -109,7 +109,7 @@ int main(int argc, char* argv[]) {
 
     //Get from us our number.
     std::cout << "Pick a number between 1 and 10 (inclusive).\n";
-    std::cin >> input;
+    std::cin >> userInput;
 
     //Get client response.
     read(newSd, &messageHandler, 100); //TODO: set to a good number.
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]) {
     
     //Compare number, say who's going first.
     messageHandler.purpose = "WHOFIRST";
-    if(input > messageHandler.details) {
+    if(stoi(userInput) > stoi(messageHandler.details)) {
         std::cout << "You go first.\n";
         messageHandler.details = "server";
     }
@@ -140,7 +140,7 @@ int main(int argc, char* argv[]) {
 
     //Get from us our number.
     std::cout << "Pick a number between 1 and 10 (inclusive).\n";
-    std::cin >> input;
+    std::cin >> userInput;
 
     //Get client response.
     read(newSd, &messageHandler, 100); //TODO: set to a good number.
@@ -152,7 +152,7 @@ int main(int argc, char* argv[]) {
     
     //Compare number, say who's going first.
     messageHandler.purpose = "WHOFIRST";
-    if(input > messageHandler.details) {
+    if(stoi(userInput) > stoi(messageHandler.details)) {
         std::cout << "You go first.\n";
         messageHandler.details = "server";
     }
