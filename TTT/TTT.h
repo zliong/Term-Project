@@ -12,31 +12,35 @@ void display();
 int input(char input, int row, int col);
 char check();
 
-//Clean a message input before we read.
-void cleanMessage(char message[MESSAGE_LENGTH]) {
-    for(int i = 0; i < MESSAGE_LENGTH; i++) {
-        message[i] = '\0';
-    }
-}
-
 //See if the response purpose matches what we expect.
 bool checkResponsePurpose(char message[MESSAGE_LENGTH], std::string expected) {
-    string strMessage(message);
-    strMessage = strMessage.substr(0, strMessage.find(':'));
-    if(strMessage == expected) { return true; }
-    return false;
+	string strMessage(message);
+	strMessage = strMessage.substr(0, strMessage.find(':'));
+	//cout << "strMessage contains " << strMessage << endl;
+	if (strMessage == expected) { return true; }
+	return false;
 }
 
 //Get a message's purpose.
 std::string getMessagePurpose(char message[MESSAGE_LENGTH]) {
-    string strMessage(message);
-    return strMessage.substr(0, strMessage.find(':'));
+	string strMessage(message);
+	return strMessage.substr(0, strMessage.find(':'));
 }
 
 //get a message's details.
 std::string getMessageDetail(char message[MESSAGE_LENGTH]) {
-    string strMessage(message);
-    return strMessage.substr(strMessage.find(':')+1, strMessage.length());
+	string strMessage(message);
+	//cout << "strMessage = " << strMessage << endl;
+	return strMessage.substr(strMessage.find(':') + 1, strMessage.length());
+}
+string convertToString(char* a, int size)
+{
+	int i;
+	string s = "";
+	for (i = 0; i < size; i++) {
+		s = s + a[i];
+	}
+	return s;
 }
 
 //initialize the Tic-Tac-Toe Board (-)
@@ -87,13 +91,13 @@ int input(char input, int row, int col)
 		else
 		{
 			cout << endl << "Co-ordinates " << row << " " << col << " are already used!" << endl << "Press ENTER to continue..." << endl;
-			do {} 			while (cin.get() != '\n');
+			do {} while (cin.get() != '\n');
 			return 1;
 		}
 	else
 	{
 		cout << "\nInvalid Co-ordinates!" << endl << "Press ENTER to continue..." << endl;
-		do {} 		while (cin.get() != '\n');
+		do {} while (cin.get() != '\n');
 		return 1;
 	}
 }
