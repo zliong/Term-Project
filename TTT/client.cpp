@@ -112,7 +112,7 @@ int main(int argc, char* argv[]){
 		read(sockfd, &messageHandler, 100);
 		//check if message is WHOFIRST
 		if (messageHandler.purpose != "WHOFIRST") {
-			close(newSd);
+			close(sockfd);
 			std::cout << "The client did not receive the appropriate response. Closing.\n";
 			return -1;
 		}
@@ -121,7 +121,7 @@ int main(int argc, char* argv[]){
 		{
 			cout << "Please input a number between 1 and 10 (inclusive): ";
 			cin >> inputs;
-		} while (inputs > 10 || inputs < 1);
+		} while (stoi(inputs) > 10 || stoi(inputs) < 1);
 		messageHandler.purpose = "WHOFIRST";
 		messageHandler.details = inputs;
 		write(sockfd, &messageHandler, sizeof(messageHandler));	//send the input back to server
