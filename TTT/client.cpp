@@ -40,8 +40,6 @@ int main(int argc, char* argv[]){
 	char serv_choice, cli_choice, nc;
 	char choice_buffer[2], co_ordinates_buffer[2], toss_buffer;
 
-	system("clear");
-
 	//Testing if correct arguments were used testing
 	if (argc != 2) {
 	     	perror("Incomplete arguments passed in.");
@@ -75,9 +73,9 @@ int main(int argc, char* argv[]){
 	//If connected user prompted with name choice
 	cout << "Enter your name : ";
 	cin >> cname;
-      
 
-        
+
+
         message messageHandler;
         read(sockfd, &messageHandler, 100);
         if(!checkServerResponse(messageHandler, "USERNAMEQUERY")){
