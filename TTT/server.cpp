@@ -181,7 +181,7 @@ int main(int argc, char* argv[]) {
         read(newSd, message, MESSAGE_LENGTH);
                 if(!checkResponsePurpose(message, "FIRSTCHOICE")){
                 close(newSd);
-                    std::cout << std::endl << "Server did not send correct response.";
+                    std::cout << std::endl << "Client did not send correct response.";
                 return 1;
                 }
 
@@ -198,7 +198,7 @@ int main(int argc, char* argv[]) {
 	}
 	else
 	{//If player wins the toss they get to go choose to be X or O
-        messageBuilder = "FIRSTCHOICE";
+        messageBuilder = "FIRSTCHOICE:";
         std::cout << std::endl << "You pick first!" << std::endl;
 		do
 		{
