@@ -318,12 +318,12 @@ int main(int argc, char* argv[]) {
             nc = check();
             if (nc == 'f')
                 continue;
-            else if (serv_choice == nc)
+            else if (cli_choice == nc)
             {
                 std::cout << std::endl << "You loose." << std::endl << serverName << " has won." << std::endl;
                 break;
             }
-            else if (cli_choice == nc)
+            else if (serv_choice == nc)
             {
                 std::cout << std::endl << "Congrats! You have won!!!" << std::endl << serverName << " lost." << std::endl;
                 break;
