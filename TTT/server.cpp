@@ -78,6 +78,7 @@ int main(int argc, char* argv[]) {
     write(newSd, messageBuilder.c_str(), messageBuilder.length());
 
     //Get response
+    cleanMessage(message);
     read(newSd, message, MESSAGE_LENGTH);
     if (!checkResponsePurpose(message, "USERNAMEQUERY")) {
         close(newSd);
@@ -93,6 +94,7 @@ int main(int argc, char* argv[]) {
 
     //Get response
     while(getMessageDetail(message) != "yes") {
+        cleanMessage(message);
         read(newSd, message, MESSAGE_LENGTH);
         if (!checkResponsePurpose(message, "READYCHECK")) {
             close(newSd);
@@ -142,6 +144,7 @@ int main(int argc, char* argv[]) {
     std::cin >> userInput;
 
     //Get client response.
+    cleanMessage(message);
     read(newSd, message, MESSAGE_LENGTH);
     if (!checkResponsePurpose(message, "WHOFIRST")) {
         close(newSd);
@@ -174,6 +177,7 @@ int main(int argc, char* argv[]) {
 		std::cout << std::endl << serverName << " Server goes first!" << std::endl;
         std::cout << clientName << " is choosing. Please wait..." << std::endl << std::endl;
 		//Client waits to receive server choice
+        cleanMessage(message);
         read(newSd, message, MESSAGE_LENGTH);
                 if(!checkResponsePurpose(message, "FIRSTCHOICE")){
                 close(newSd);
@@ -255,6 +259,7 @@ int main(int argc, char* argv[]) {
 		if (inp % 2 != 0)
 		{
             std::cout << std::endl << clientName << "'s turn. Please wait..." << std::endl;
+            cleanMessage(message);
             read(newSd, message, MESSAGE_LENGTH);
 			if(!checkResponsePurpose(message, "TURNS")){
                 close(newSd);

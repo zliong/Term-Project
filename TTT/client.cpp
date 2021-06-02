@@ -69,6 +69,7 @@ int main(int argc, char* argv[]){
 	cout << "Enter your name : ";
 	cin >> cname;
 
+        cleanMessage(message);
         read(sockfd, message, MESSAGE_LENGTH);
         if(!checkResponsePurpose(message, "USERNAMEQUERY")){
             close(sockfd);
@@ -80,6 +81,7 @@ int main(int argc, char* argv[]){
         messageBuilder += cname;
         write(sockfd, messageBuilder.c_str(), messageBuilder.length());
 
+        cleanMessage(message);
         read(sockfd, message, MESSAGE_LENGTH);
         if(!checkResponsePurpose(message, "READYCHECK")){
             close(sockfd);
@@ -99,6 +101,7 @@ int main(int argc, char* argv[]){
         cout << "You have joined " << servName << "'s game!" << endl;
 
 		//who first starts here, get response from server
+        cleanMessage(message);
 		read(sockfd, message, MESSAGE_LENGTH);
 		//check if message is WHOFIRST
 		if (!checkResponsePurpose(message, "WHOFIRST")) {
@@ -117,6 +120,7 @@ int main(int argc, char* argv[]){
 		write(sockfd, messageBuilder.c_str(), messageBuilder.length());	//send the input back to server
 
 		//get response from server
+        cleanMessage(message);
 		read(sockfd, message, MESSAGE_LENGTH);
 		first = getMessageDetail(message);
 
@@ -127,6 +131,7 @@ int main(int argc, char* argv[]){
 		cout << endl << sname << " Server goes first!" << endl;
 		cout << servName << " is choosing. Please wait..." << endl << endl;
 		//Client waits to receive server choice
+        cleanMessage(message);
 		read(sockfd, message, MESSAGE_LENGTH);
                 if(!checkResponsePurpose(message, "FIRSTCHOICE")){
                 close(sockfd);
@@ -210,6 +215,7 @@ int main(int argc, char* argv[]){
 		if (inp % 2 != 0)
 		{
 			cout << endl << servName << "'s turn. Please wait..." << endl;
+            cleanMessage(message);
 			read(sockfd, message, MESSAGE_LENGTH);
 			if(!checkResponsePurpose(message, "TURNS")){
                         close(sockfd);
