@@ -108,15 +108,29 @@ int main(int argc, char* argv[]){
         cout << endl << "Game created!" << endl;
         cout << "You have joined " << servName << "'s game!" << endl;
 
+		//who first starts here, get response from server
+		read(sockfd, &messageHandler, 100);
+		//check if message is WHOFIRST
+		if (messageHandler.purpose != "WHOFIRST") {
+			close(newSd);
+			std::cout << "The client did not receive the appropriate response. Closing.\n";
+			return -1;
+		}
 
+		do
+		{
+			cout << "Please input a number between 1 and 10 (inclusive): ";
+			cin >> inputs;
+		} while (inputs > 10 || inputs < 1);
+		messageHandler.purpose = "WHOFIRST";
+		messageHandler.details = inputs;
+		write(sockfd, &messageHandler, sizeof(messageHandler));	//send the input back to server
 
+		//get response from server
+		read(sockfd, &messageHandler, sizeof(messageHandler));
+		first = messageHandler.details;
 
-
-	//whoisfirst goes here
-        
 	
-	
-
 	
 	if (first == "server")
 	{//If the server player wins they get to choose to be X or O
