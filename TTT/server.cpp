@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     clientName = getMessageDetail(message);
-    cout << "Message contains: " << getMessageDetail(message) << endl;
+   // cout << "Message contains: " << getMessageDetail(message) << endl;
     std::cout << "Your opponent is " << clientName << '.';
 
     //Send message seeing if they're ready to play.
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
         }
         if (getMessageDetail(message) == "no")
         {
-            cout << clientName << "has not accepted!" << endl;
+            cout << " " << clientName << " has not accepted!" << endl;
             return -1;
         }
     } while (getMessageDetail(message) != "yes");
