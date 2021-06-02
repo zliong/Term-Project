@@ -73,7 +73,7 @@ int main(int argc, char* argv[]) {
 
     //Move on now, work on getting this game going!
     //Who are we playing?
-    messageHandler.purpose = "USERNAMEQUERY ";
+    messageHandler.purpose = "USERNAMEQUERY";
     messageHandler.details = serverName;
     write(newSd, &messageHandler, sizeof(messageHandler));
 
