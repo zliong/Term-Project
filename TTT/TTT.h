@@ -4,17 +4,33 @@
 
 using namespace std;
 
+const int MESSAGE_LENGTH = 100;
+
 char Board[3][3], player1, player2;
 void init();
 void display();
 int input(char input, int row, int col);
 char check();
 
-//Message Structure, used for the protocol to communicate between client and server.
-struct message {
-    std::string purpose;
-    std::string details;
-};
+//See if the response purpose matches what we expect.
+bool checkResponsePurpose(char message[MESSAGE_LENGTH], std::string expected) {
+    string strMessage(message);
+    strMessage = strMessage.substr(0, strMessage.find(':'));
+    if(strMessage == expected) { return true; }
+    return false;
+}
+
+//Get a message's purpose.
+std::string getMessagePurpose(char message[MESSAGE_LENGTH]) {
+    string strMessage(message);
+    return strMessage.substr(0, strMessage.find(':'));
+}
+
+//get a message's details.
+std::string getMessageDetail(char message[MESSAGE_LENGTH]) {
+    string strMessage(message);
+    return strMessage.substr(strMessage.find(':')+1, strMessage.length());
+}
 
 //initialize the Tic-Tac-Toe Board (-)
 void init()

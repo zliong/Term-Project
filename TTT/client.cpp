@@ -17,13 +17,6 @@
 
 using namespace std;
 
-bool checkServerResponse(message message, std::string expected) {
-    if(message.purpose != expected) {
-        return false;
-    }
-    return true;
-}
-
 int main(int argc, char* argv[]){
 
 	int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
@@ -32,8 +25,10 @@ int main(int argc, char* argv[]){
 	char* ptr_port = (char*)&PORT;
 	struct sockaddr_in serv_addr;
 	struct hostent* host;
+	char message[MESSAGE_LENGTH];
+	std::string messageBuilder;
  
-        string inputs, servName, first;
+    string inputs, servName, first;
 	int count = 0;
 	int inp, x, y, ni, toss;
 	int	inp_true = 0;
@@ -74,32 +69,29 @@ int main(int argc, char* argv[]){
 	cout << "Enter your name : ";
 	cin >> cname;
 
-
-
-        message messageHandler;
-        read(sockfd, &messageHandler, 100);
-        if(!checkServerResponse(messageHandler, "USERNAMEQUERY")){
+        read(sockfd, message, MESSAGE_LENGTH);
+        if(!checkResponsePurpose(message, "USERNAMEQUERY")){
             close(sockfd);
             cout << endl << "Server did not send correct response.";
             return 1;
         }
-        messageHandler.purpose = "USERNAMEQUERY";
-        servName = messageHandler.details;
-        messageHandler.details = cname;//might need to change to string
-        write(sockfd, &messageHandler, sizeof(messageHandler));
+        servName = getMessageDetail(message);
+        messageBuilder = "USERNAMEQUERY:";
+        messageBuilder += cname;
+        write(sockfd, messageBuilder.c_str(), messageBuilder.length());
 
-        read(sockfd, &messageHandler, 100);
-        if(!checkServerResponse(messageHandler, "READYCHECK")){
+        read(sockfd, message, MESSAGE_LENGTH);
+        if(!checkResponsePurpose(message, "READYCHECK")){
             close(sockfd);
             cout << endl << "Server did not send correct response.";
             return 1;
         }
-        messageHandler.purpose = "READYCHECK";
+        messageBuilder = "READYCHECK:";
         cout << endl << servName << " is ready to play tic tac toe, are you? [yes/no]: ";
         cin >> inputs;
         cout << endl << endl;
-        messageHandler.details = inputs;//might need to change to string
-        write(sockfd, &messageHandler, sizeof(messageHandler));
+        messageBuilder += inputs;//might need to change to string
+        write(sockfd, messageBuilder.c_str(), messageBuilder.length());
 
         cout << "Creating game. Please wait..." << endl;
         sleep(2);
@@ -107,9 +99,9 @@ int main(int argc, char* argv[]){
         cout << "You have joined " << servName << "'s game!" << endl;
 
 		//who first starts here, get response from server
-		read(sockfd, &messageHandler, 100);
+		read(sockfd, message, MESSAGE_LENGTH);
 		//check if message is WHOFIRST
-		if (messageHandler.purpose != "WHOFIRST") {
+		if (!checkResponsePurpose(message, "WHOFIRST")) {
 			close(sockfd);
 			std::cout << "The client did not receive the appropriate response. Closing.\n";
 			return -1;
@@ -120,13 +112,13 @@ int main(int argc, char* argv[]){
 			cout << "Please input a number between 1 and 10 (inclusive): ";
 			cin >> inputs;
 		} while (stoi(inputs) > 10 || stoi(inputs) < 1);
-		messageHandler.purpose = "WHOFIRST";
-		messageHandler.details = inputs;
-		write(sockfd, &messageHandler, sizeof(messageHandler));	//send the input back to server
+		messageBuilder = "WHOFIRST:";
+		messageBuilder += inputs;
+		write(sockfd, messageBuilder.c_str(), messageBuilder.length());	//send the input back to server
 
 		//get response from server
-		read(sockfd, &messageHandler, sizeof(messageHandler));
-		first = messageHandler.details;
+		read(sockfd, message, MESSAGE_LENGTH);
+		first = getMessageDetail(message);
 
 	
 	
@@ -135,14 +127,14 @@ int main(int argc, char* argv[]){
 		cout << endl << sname << " Server goes first!" << endl;
 		cout << servName << " is choosing. Please wait..." << endl << endl;
 		//Client waits to receive server choice
-		read(sockfd, &messageHandler, 100);
-                if(!checkServerResponse(messageHandler, "FIRSTCHOICE")){
+		read(sockfd, message, MESSAGE_LENGTH);
+                if(!checkResponsePurpose(message, "FIRSTCHOICE")){
                 close(sockfd);
                 cout << endl << "Server did not send correct response.";
                 return 1;
                 }
 
-		if(messageHandler.details == "X"){
+		if(getMessageDetail(message) == "X"){
 	        serv_choice = 'X';
 		cli_choice = 'O';
                 } else {
@@ -164,7 +156,7 @@ int main(int argc, char* argv[]){
 			{
 				serv_choice = 'O';
 				cli_choice = 'X';
-                messageHandler.details = "X";
+                getMessageDetail(message) = "X";
 				inp_true = 1;
 				cout << endl << servName << " gets O." << endl << endl << "Lets Play!" << endl << endl;
 			}
@@ -172,7 +164,7 @@ int main(int argc, char* argv[]){
 			{
 				serv_choice = 'X';
 				cli_choice = 'O';
-                                messageHandler.details = "O";
+                getMessageDetail(message) = "O";
 				inp_true = 1;
 				cout << endl << servName << " gets X." << endl << endl << "Lets Play!" << endl << endl;
 			}
@@ -186,8 +178,8 @@ int main(int argc, char* argv[]){
 		choice_buffer[0] = serv_choice;
 		choice_buffer[1] = cli_choice;
                 
-		messageHandler.purpose = "FIRSTCHOICE";
-                write(sockfd, &messageHandler, sizeof(messageHandler));
+		messageBuilder = "FIRSTCHOICE:";
+		write(sockfd, messageBuilder.c_str(), messageBuilder.length());
 
 	}
 	//Whichever player is X will get to go first
@@ -210,7 +202,7 @@ int main(int argc, char* argv[]){
 	display();
 	//Game officially starts. Loops till all moves are made, or player creates a line of three
         string xStr, yStr;
-        messageHandler.purpose = "TURNS";
+        messageBuilder = "TURNS:";
 	while (count < 9)
 	{
 		memset(&co_ordinates_buffer, 0, sizeof(co_ordinates_buffer));
@@ -218,14 +210,14 @@ int main(int argc, char* argv[]){
 		if (inp % 2 != 0)
 		{
 			cout << endl << servName << "'s turn. Please wait..." << endl;
-			read(sockfd, &messageHandler, 100);
-			if(!checkServerResponse(messageHandler, "TURNS")){
+			read(sockfd, message, MESSAGE_LENGTH);
+			if(!checkResponsePurpose(message, "TURNS")){
                         close(sockfd);
                         cout << endl << "Server did not send correct response.";
                         return 1;
                         }
-                        xStr = messageHandler.details[0];
-                        yStr = messageHandler.details[2];
+                        xStr = getMessageDetail(message)[0];
+                        yStr = getMessageDetail(message)[2];
 			x = std::stoi(xStr);
 			y = std::stoi(yStr);
 			ni = input(serv_choice, x, y);
@@ -243,11 +235,11 @@ int main(int argc, char* argv[]){
 			if (ni == 0)
 			{
 				inp++;
-				messageHandler.details = to_string(x) + " " + to_string(y); //convert input into string to send message
+                getMessageDetail(message) = to_string(x) + " " + to_string(y); //convert input into string to send message
         
 				cout << endl << "Updating Matrix..." << endl;
 
-				write(sockfd, &messageHandler, sizeof(messageHandler));
+				write(sockfd, messageBuilder.c_str(), messageBuilder.length());
 			}
 		}
 

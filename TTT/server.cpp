@@ -19,7 +19,6 @@
 
 //Function Prototype
 void* ConnectionProcessor(void* socket);
-bool checkClientResponse(message message, std::string expected);
 
 int main(int argc, char* argv[]) {
     //Local Variables
@@ -28,7 +27,8 @@ int main(int argc, char* argv[]) {
     std::string clientName;
     std::string chat;
     std::string userInput;
-    message messageHandler;
+    std::string messageBuilder;
+    char message[MESSAGE_LENGTH];
 
     //Improvement to make the program more user-friendly.
     if(argc < 2) {
@@ -73,29 +73,28 @@ int main(int argc, char* argv[]) {
 
     //Move on now, work on getting this game going!
     //Who are we playing?
-    messageHandler.purpose = "USERNAMEQUERY";
-    messageHandler.details = serverName;
-    write(newSd, &messageHandler, sizeof(messageHandler));
+    messageBuilder = "USERNAMEQUERY:";
+    messageBuilder += serverName;
+    write(newSd, messageBuilder.c_str(), messageBuilder.length());
 
     //Get response
-    read(newSd, &messageHandler, 100); //TODO: set to a good number.
-    if (!checkClientResponse(messageHandler, "USERNAMEQUERY")) {
+    read(newSd, message, MESSAGE_LENGTH);
+    if (!checkResponsePurpose(message, "USERNAMEQUERY")) {
         close(newSd);
         std::cout << "The client did not have an expected response. Closing.\n";
         return -1;
     }
-    clientName = messageHandler.purpose;
+    clientName = getMessageDetail(message);
     std::cout << "Your opponent is " << clientName << '.';
 
     //Send message seeing if they're ready to play.
-    messageHandler.purpose = "READYCHECK";
-    messageHandler.details = nullptr;
-    write(newSd, &messageHandler, sizeof(messageHandler));
+    messageBuilder = "READYCHECK:";
+    write(newSd, messageBuilder.c_str(), messageBuilder.length());
 
     //Get response
-    while(messageHandler.details != "yes") {
-        read(newSd, &messageHandler, 100); //TODO: set to a good number.
-        if (!checkClientResponse(messageHandler, "READYCHECK")) {
+    while(getMessageDetail(message) != "yes") {
+        read(newSd, message, MESSAGE_LENGTH);
+        if (!checkResponsePurpose(message, "READYCHECK")) {
             close(newSd);
             std::cout << "The client did not have an expected response. Closing.\n";
             return -1;
@@ -112,7 +111,7 @@ int main(int argc, char* argv[]) {
     std::cin >> userInput;
 
     //Get client response.
-    read(newSd, &messageHandler, 100); //TODO: set to a good number.
+    read(newSd, message, MESSAGE_LENGTH);
     if (!checkClientResponse(messageHandler, "WHOFIRST")) {
         close(newSd);
         std::cout << "The client did not have an expected response. Closing.\n";
@@ -134,33 +133,33 @@ int main(int argc, char* argv[]) {
     //Done by Carson Riland.
     //My new code for the game with edits and notes for server implementation
     //We're ready to play, choose a side.
-    messageHandler.purpose = "WHOFIRST";
-    messageHandler.details = "1 10";
-    write(newSd, &messageHandler, sizeof(messageHandler));
+    messageBuilder = "WHOFIRST:";
+    messageBuilder += "1 10";
+    write(newSd, messageBuilder.c_str(), messageBuilder.length());
 
     //Get from us our number.
     std::cout << "Pick a number between 1 and 10 (inclusive).\n";
     std::cin >> userInput;
 
     //Get client response.
-    read(newSd, &messageHandler, 100); //TODO: set to a good number.
-    if (!checkClientResponse(messageHandler, "WHOFIRST")) {
+    read(newSd, message, MESSAGE_LENGTH);
+    if (!checkResponsePurpose(message, "WHOFIRST")) {
         close(newSd);
         std::cout << "The client did not have an expected response. Closing.\n";
         return -1;
     }
     
     //Compare number, say who's going first.
-    messageHandler.purpose = "WHOFIRST";
-    if(stoi(userInput) > stoi(messageHandler.details)) {
+    messageBuilder = "WHOFIRST:";
+    if(stoi(userInput) > stoi(getMessageDetail(message))) {
         std::cout << "You go first.\n";
-        messageHandler.details = "server";
+        messageBuilder += "server";
     }
     else {
         std::cout << "Client goes first.\n";
-        messageHandler.details = "client";
+        messageBuilder += "client";
     }
-    write(newSd, &messageHandler, sizeof(messageHandler));
+    write(newSd, messageBuilder.c_str(), messageBuilder.length());
 
     //This is the beginning of the server version of the game code ---------------------------------
     //include these at the top
@@ -170,19 +169,19 @@ int main(int argc, char* argv[]) {
 	int	inp_true = 0;
 	char serv_choice, cli_choice, nc;
 
-    if (messageHandler.details == "client")
+    if (getMessageDetail(message) == "client")
 	{//If the server player wins they get to choose to be X or O
 		std::cout << std::endl << serverName << " Server goes first!" << std::endl;
         std::cout << clientName << " is choosing. Please wait..." << std::endl << std::endl;
 		//Client waits to receive server choice
-		read(newSd, &messageHandler, 100);
-                if(!checkClientResponse(messageHandler, "FIRSTCHOICE")){
+        read(newSd, message, MESSAGE_LENGTH);
+                if(!checkResponsePurpose(message, "FIRSTCHOICE")){
                 close(newSd);
                     std::cout << std::endl << "Server did not send correct response.";
                 return 1;
                 }
 
-		if(messageHandler.details == "O"){
+		if(getMessageDetail(message) == "O"){
 	        serv_choice = 'X';
 		cli_choice = 'O';
                 } else {
@@ -195,6 +194,7 @@ int main(int argc, char* argv[]) {
 	}
 	else
 	{//If player wins the toss they get to go choose to be X or O
+        messageBuilder = "FIRSTCHOICE";
         std::cout << std::endl << "You pick first!" << std::endl;
 		do
 		{
@@ -204,7 +204,7 @@ int main(int argc, char* argv[]) {
 			{
 				serv_choice = 'O';
 				cli_choice = 'X';
-                messageHandler.details = "O";
+                messageBuilder += "O";
 				inp_true = 1;
                 std::cout << std::endl << clientName << " gets X." << std::endl << std::endl << "Lets Play!" << std::endl << std::endl;
 			}
@@ -212,7 +212,7 @@ int main(int argc, char* argv[]) {
 			{
 				serv_choice = 'X';
 				cli_choice = 'O';
-                                messageHandler.details = "O";
+                messageBuilder += "O";
 				inp_true = 1;
                 std::cout << std::endl << clientName << " gets O." << std::endl << std::endl << "Lets Play!" << std::endl << std::endl;
 			}
@@ -223,9 +223,8 @@ int main(int argc, char* argv[]) {
 			}
 		} while (inp_true == 0);
 		//After valid first choice is made between X and O, hte info is sent to the server/client
-                
-		messageHandler.purpose = "FIRSTCHOICE";
-                write(newSd, &messageHandler, sizeof(messageHandler));
+
+        write(newSd, messageBuilder.c_str(), messageBuilder.length());
 
 	}
 	//Whichever player is X will get to go first
@@ -248,7 +247,7 @@ int main(int argc, char* argv[]) {
 	display();
 	//Game officially starts. Loops till all moves are made, or player creates a line of three
     std::string xStr, yStr;
-        messageHandler.purpose = "TURNS";
+        messageBuilder = "TURNS:";
 	while (count < 9)
 	{
 		
@@ -256,14 +255,14 @@ int main(int argc, char* argv[]) {
 		if (inp % 2 != 0)
 		{
             std::cout << std::endl << clientName << "'s turn. Please wait..." << std::endl;
-			read(newSd, &messageHandler, 100);
-			if(!checkClientResponse(messageHandler, "TURNS")){
+            read(newSd, message, MESSAGE_LENGTH);
+			if(!checkResponsePurpose(message, "TURNS")){
                 close(newSd);
                 std::cout << std::endl << "Server did not send correct response.";
                 return 1;
             }
-            xStr = messageHandler.details[0];
-            yStr = messageHandler.details[2];
+            xStr = getMessageDetail(message)[0];
+            yStr = getMessageDetail(message)[2];
 			x = std::stoi(xStr);
 			y = std::stoi(yStr);
 			ni = input(cli_choice, x, y);
@@ -281,11 +280,11 @@ int main(int argc, char* argv[]) {
 			if (ni == 0)
 			{
 				inp++;
-				messageHandler.details = std::to_string(x) + " " + std::to_string(y); //convert input into string to send message
+				messageBuilder += std::to_string(x) + " " + std::to_string(y); //convert input into string to send message
 
                 std::cout << std::endl << "Updating Matrix..." << std::endl;
 
-				write(newSd, &messageHandler, sizeof(messageHandler));
+                write(newSd, messageBuilder.c_str(), messageBuilder.length());
 			}
 		}
 
@@ -322,14 +321,6 @@ int main(int argc, char* argv[]) {
 	close(newSd);
 
 	return 0;
-}
-
-//Check client response, if client response is bad (unexpected) the program reports and ends.
-bool checkClientResponse(message message, std::string expected) {
-    if(message.purpose != expected) {
-        return false;
-    }
-    return true;
 }
 
 void* ConnectionProcessor(void* socket) {
