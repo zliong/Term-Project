@@ -224,7 +224,7 @@ int main(int argc, char* argv[]) {
             {
                 serv_choice = 'O';
                 cli_choice = 'X';
-                messageBuilder += "O";
+                //messageBuilder += "O";
                 inp_true = 1;
                 std::cout << std::endl << clientName << " gets X." << std::endl << std::endl << "Lets Play!" << std::endl << std::endl;
             }
@@ -232,7 +232,7 @@ int main(int argc, char* argv[]) {
             {
                 serv_choice = 'X';
                 cli_choice = 'O';
-                messageBuilder += "O";
+                //messageBuilder += "O";
                 inp_true = 1;
                 std::cout << std::endl << clientName << " gets O." << std::endl << std::endl << "Lets Play!" << std::endl << std::endl;
             }
@@ -243,7 +243,7 @@ int main(int argc, char* argv[]) {
             }
         } while (inp_true == 0);
         //After valid first choice is made between X and O, hte info is sent to the server/client
-
+        messageBuilder += serv_choice;
         write(newSd, messageBuilder.c_str(), messageBuilder.length());
 
     }

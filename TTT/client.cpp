@@ -79,7 +79,9 @@ int main(int argc, char* argv[]) {
 	messageBuilder = "USERNAMEQUERY:";
 	messageBuilder += cname;
 	write(sockfd, messageBuilder.c_str(), messageBuilder.length());
-
+	for (int i = 0; i < MESSAGE_LENGTH; i++) {
+		message[i] = '\0';
+	};
 	read(sockfd, message, MESSAGE_LENGTH);
 	//cout << "Message now contains:" << getMessageDetail(message) << endl;
 	if (!checkResponsePurpose(message, "READYCHECK")) {
@@ -124,13 +126,17 @@ int main(int argc, char* argv[]) {
 	messageBuilder = "WHOFIRST:";
 	messageBuilder += inputs;
 	write(sockfd, messageBuilder.c_str(), messageBuilder.length());	//send the input back to server
-
+	for (int i = 0; i < MESSAGE_LENGTH; i++) {
+		message[i] = '\0';
+	};
 	//get response from server
 	read(sockfd, message, MESSAGE_LENGTH);
 	first = getMessageDetail(message);
-	//cout << "First contains" << first << endl;
-
-
+	//cout << "First contains " << first << endl;
+	//cout << "Message is " << getMessageDetail(message) << endl; 
+	for (int i = 0; i < MESSAGE_LENGTH; i++) {
+		message[i] = '\0';
+	};
 	if (first == "server")
 	{//If the server player wins they get to choose to be X or O
 		cout << endl << servName << " Server goes first!" << endl;
