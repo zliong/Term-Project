@@ -128,12 +128,12 @@ int main(int argc, char* argv[]) {
 	//get response from server
 	read(sockfd, message, MESSAGE_LENGTH);
 	first = getMessageDetail(message);
-	cout << "First contains" << first << endl;
+	//cout << "First contains" << first << endl;
 
 
 	if (first == "server")
 	{//If the server player wins they get to choose to be X or O
-		cout << endl << sname << " Server goes first!" << endl;
+		cout << endl << servName << " Server goes first!" << endl;
 		cout << servName << " is choosing. Please wait..." << endl << endl;
 		//Client waits to receive server choice
 		read(sockfd, message, MESSAGE_LENGTH);
@@ -151,13 +151,14 @@ int main(int argc, char* argv[]) {
 			serv_choice = 'O';
 			cli_choice = 'X';
 		}
-		cout << sname << " has chosen " << serv_choice << endl << endl << "You will play with " << cli_choice << endl;
+		cout << serv_choice << " has chosen " << serv_choice << endl << endl << "You will play with " << cli_choice << endl;
 		cout << endl << "Lets Play!" << endl << endl;
 
 	}
 	else
 	{//If player wins the toss they get to go choose to be X or O
 		cout << endl << "You pick first!" << endl;
+		messageBuilder = "FIRSTCHOICE:";
 		do
 		{
 			cout << cname << " Enter your Choice (X or O): ";
@@ -166,7 +167,7 @@ int main(int argc, char* argv[]) {
 			{
 				serv_choice = 'O';
 				cli_choice = 'X';
-				getMessageDetail(message) = "X";
+				//messageBuilder += "X";
 				inp_true = 1;
 				cout << endl << servName << " gets O." << endl << endl << "Lets Play!" << endl << endl;
 			}
@@ -174,7 +175,7 @@ int main(int argc, char* argv[]) {
 			{
 				serv_choice = 'X';
 				cli_choice = 'O';
-				getMessageDetail(message) = "O";
+				//messageBuilder += "O";
 				inp_true = 1;
 				cout << endl << servName << " gets X." << endl << endl << "Lets Play!" << endl << endl;
 			}
@@ -188,20 +189,20 @@ int main(int argc, char* argv[]) {
 		choice_buffer[0] = serv_choice;
 		choice_buffer[1] = cli_choice;
 
-		messageBuilder = "FIRSTCHOICE:";
+		messageBuilder += cli_choice;
 		write(sockfd, messageBuilder.c_str(), messageBuilder.length());
 
 	}
 	//Whichever player is X will get to go first
 	if (serv_choice == 'X')
 	{
-		inp = 1;
-		cout << sname << " will play first." << endl << endl;
+		inp = 2;
+		cout << servName << " will play first." << endl << endl;
 
 	}
 	else
 	{
-		inp = 2;
+		inp = 1;
 		cout << "You will play first." << endl << endl;
 	}
 
@@ -218,7 +219,7 @@ int main(int argc, char* argv[]) {
 		messageBuilder = "TURNS:";
 		memset(&co_ordinates_buffer, 0, sizeof(co_ordinates_buffer));
 
-		if (inp % 2 != 0)
+		if (inp % 2 == 0)
 		{
 			cout << endl << servName << "'s turn. Please wait..." << endl;
 			read(sockfd, message, MESSAGE_LENGTH);

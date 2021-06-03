@@ -189,8 +189,8 @@ int main(int argc, char* argv[]) {
         message[i] = '\0';
     };
     if (tempMsg == "client")
-    {//If the server player wins they get to choose to be X or O
-        std::cout << std::endl << serverName << " Server goes first!" << std::endl;
+    {//If the server player loses, client get to choose to be X or O
+        std::cout << std::endl << clientName << " goes first!" << std::endl;
         std::cout << clientName << " is choosing. Please wait..." << std::endl << std::endl;
         //Client waits to receive server choice
         read(newSd, message, MESSAGE_LENGTH);
@@ -250,13 +250,13 @@ int main(int argc, char* argv[]) {
     //Whichever player is X will get to go first
     if (cli_choice == 'X')
     {
-        inp = 1;
-        std::cout << serverName << " will play first." << std::endl << std::endl;
+        inp = 2;
+        std::cout << clientName << " will play first." << std::endl << std::endl;
 
     }
     else
     {
-        inp = 2;
+        inp = 1;
         std::cout << "You will play first." << std::endl << std::endl;
     }
 
@@ -274,6 +274,38 @@ int main(int argc, char* argv[]) {
 
         if (inp % 2 != 0)
         {
+            std::cout << std::endl << "Your turn. Enter co-ordinates separated by a space : ";
+            std::cin >> x >> y;
+            ni = input(serv_choice, x, y);
+            if (ni == 0)
+            {
+                inp++;
+                messageBuilder += std::to_string(x) + " " + std::to_string(y); //convert input into string to send message
+
+                std::cout << std::endl << "Updating Matrix..." << std::endl;
+
+                write(newSd, messageBuilder.c_str(), messageBuilder.length());
+            }
+            // std::cout << std::endl << clientName << "'s turn. Please wait..." << std::endl;
+            // read(newSd, message, MESSAGE_LENGTH);
+            // if (!checkResponsePurpose(message, "TURNS")) {
+            //     close(newSd);
+            //     std::cout << std::endl << "Server did not send correct response.";
+            //     return 1;
+            // }
+            // xStr = getMessageDetail(message)[0];
+            // yStr = getMessageDetail(message)[2];
+            // x = std::stoi(xStr);
+            // y = std::stoi(yStr);
+            // ni = input(cli_choice, x, y);
+            // if (ni == 0)
+            // {
+            //     inp++;
+            //     std::cout << std::endl << serverName << " has played. Updating Matrix..." << std::endl;
+            // }
+        }
+        else
+        { //Else portion has been changed
             std::cout << std::endl << clientName << "'s turn. Please wait..." << std::endl;
             read(newSd, message, MESSAGE_LENGTH);
             if (!checkResponsePurpose(message, "TURNS")) {
@@ -290,21 +322,6 @@ int main(int argc, char* argv[]) {
             {
                 inp++;
                 std::cout << std::endl << serverName << " has played. Updating Matrix..." << std::endl;
-            }
-        }
-        else
-        { //Else portion has been changed
-            std::cout << std::endl << "Your turn. Enter co-ordinates separated by a space : ";
-            std::cin >> x >> y;
-            ni = input(serv_choice, x, y);
-            if (ni == 0)
-            {
-                inp++;
-                messageBuilder += std::to_string(x) + " " + std::to_string(y); //convert input into string to send message
-
-                std::cout << std::endl << "Updating Matrix..." << std::endl;
-
-                write(newSd, messageBuilder.c_str(), messageBuilder.length());
             }
         }
 
