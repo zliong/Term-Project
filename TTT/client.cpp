@@ -81,7 +81,7 @@ int main(int argc, char* argv[]) {
 	write(sockfd, messageBuilder.c_str(), messageBuilder.length());
 
 	read(sockfd, message, MESSAGE_LENGTH);
-	cout << "Message now contains:" << getMessageDetail(message) << endl;
+	//cout << "Message now contains:" << getMessageDetail(message) << endl;
 	if (!checkResponsePurpose(message, "READYCHECK")) {
 		close(sockfd);
 		cout << endl << "Server did not send correct response.";
@@ -215,7 +215,7 @@ int main(int argc, char* argv[]) {
 
 	while (count < 9)
 	{
-        messageBuilder = "TURNS:";
+		messageBuilder = "TURNS:";
 		memset(&co_ordinates_buffer, 0, sizeof(co_ordinates_buffer));
 
 		if (inp % 2 != 0)
@@ -266,12 +266,12 @@ int main(int argc, char* argv[]) {
 				continue;
 			else if (serv_choice == nc)
 			{
-				cout << endl << "You loose." << endl << sname << " has won." << endl;
+				cout << endl << "You loose." << endl << servName << " has won." << endl;
 				break;
 			}
 			else if (cli_choice == nc)
 			{
-				cout << endl << "Congrats! You have won!!!" << endl << sname << " lost." << endl;
+				cout << endl << "Congrats! You have won!!!" << endl << servName << " lost." << endl;
 				break;
 			}
 		}

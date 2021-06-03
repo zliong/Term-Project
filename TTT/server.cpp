@@ -87,7 +87,7 @@ int main(int argc, char* argv[]) {
         return -1;
     }
     clientName = getMessageDetail(message);
-   // cout << "Message contains: " << getMessageDetail(message) << endl;
+    //cout << "Message contains: " << getMessageDetail(message) << endl;
     std::cout << "Your opponent is " << clientName << '.';
 
     //Send message seeing if they're ready to play.
@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
         }
         if (getMessageDetail(message) == "no")
         {
-            cout << " " << clientName << " has not accepted!" << endl;
+            cout << clientName << " has not accepted!" << endl;
             return -1;
         }
     } while (getMessageDetail(message) != "yes");
@@ -325,7 +325,7 @@ int main(int argc, char* argv[]) {
             }
             else if (serv_choice == nc)
             {
-                std::cout << std::endl << "Congrats! You have won!!!" << std::endl << serverName << " lost." << std::endl;
+                std::cout << std::endl << "Congrats! You have won!!!" << std::endl << clientName << " lost." << std::endl;
                 break;
             }
         }
@@ -334,7 +334,11 @@ int main(int argc, char* argv[]) {
     }
     //If there is a draw both players are notified
     if (nc == 'f')
+    {
         std::cout << std::endl << "Game ends in a draw." << std::endl;
+        //send info to client that the game has drawn
+    }
+
 
 
     std::cout << std::endl << "Thank You for playing Tic-tac-Toe" << std::endl;
