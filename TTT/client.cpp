@@ -242,7 +242,7 @@ int main(int argc, char* argv[]) {
 			if (ni == 0)
 			{
 				inp++;
-				cout << endl << sname << " has played. Updating Matrix..." << endl;
+				cout << endl << servName << " has played. Updating Matrix..." << endl;
 			}
 		}
 		else
