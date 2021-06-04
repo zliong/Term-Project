@@ -6,14 +6,12 @@
 #include <sys/types.h>    // socket, bind
 #include <sys/socket.h>   // socket, bind, listen, inet_ntoa
 #include <netinet/in.h>   // htonl, htons, inet_ntoa
-#include <arpa/inet.h>    // inet_ntoa
 #include    <unistd.h>    // read, write, close
 #include   <strings.h>     // bzero
 #include <netinet/tcp.h>  // SO_REUSEADDR
 #include <sys/uio.h>      // writev
 #include <sys/time.h>     //gettimeofday
 #include <string>         //string
-#include <pthread.h>      //Pthread
 #include <iostream>
 #include "TTT.h"
 
@@ -65,12 +63,6 @@ int main(int argc, char* argv[]) {
     int newSd = accept(serverSd, (sockaddr*)&newsock, &newsockSize);
     std::cout << "Got a client to play tic tac toe with!\n";
 
-    //Create new thread for chat message getting.
-    //pthread_t thread;
-
-    //Send the input to a thread to deal with it.
-    //pthread_create(&thread, nullptr, ConnectionProcessor, (void*) newSd);
-
     //Move on now, work on getting this game going!
     //Who are we playing?
     messageBuilder = "USERNAMEQUERY:";
@@ -112,34 +104,7 @@ int main(int argc, char* argv[]) {
             return -1;
         }
     } while (getMessageDetail(message) != "yes");
-    /*
-        //We're ready to play, choose a side.
-        messageHandler.purpose = "WHOFIRST";
-        messageHandler.details = "1 10";
-        write(newSd, &messageHandler, sizeof(messageHandler));
-        //Get from us our number.
-        std::cout << "Pick a number between 1 and 10 (inclusive).\n";
-        std::cin >> userInput;
-        //Get client response.
-        read(newSd, message, MESSAGE_LENGTH);
-        if (!checkClientResponse(messageHandler, "WHOFIRST")) {
-            close(newSd);
-            std::cout << "The client did not have an expected response. Closing.\n";
-            return -1;
-        }
 
-        //Compare number, say who's going first.
-        messageHandler.purpose = "WHOFIRST";
-        if(stoi(userInput) > stoi(messageHandler.details)) {
-            std::cout << "You go first.\n";
-            messageHandler.details = "server";
-        }
-        else {
-            std::cout << "Client goes first.\n";
-            messageHandler.details = "client";
-        }
-        write(newSd, &messageHandler, sizeof(messageHandler));
-    */
     //Done by Carson Riland.
     //My new code for the game with edits and notes for server implementation
     //We're ready to play, choose a side.
@@ -286,23 +251,6 @@ int main(int argc, char* argv[]) {
 
                 write(newSd, messageBuilder.c_str(), messageBuilder.length());
             }
-            // std::cout << std::endl << clientName << "'s turn. Please wait..." << std::endl;
-            // read(newSd, message, MESSAGE_LENGTH);
-            // if (!checkResponsePurpose(message, "TURNS")) {
-            //     close(newSd);
-            //     std::cout << std::endl << "Server did not send correct response.";
-            //     return 1;
-            // }
-            // xStr = getMessageDetail(message)[0];
-            // yStr = getMessageDetail(message)[2];
-            // x = std::stoi(xStr);
-            // y = std::stoi(yStr);
-            // ni = input(cli_choice, x, y);
-            // if (ni == 0)
-            // {
-            //     inp++;
-            //     std::cout << std::endl << serverName << " has played. Updating Matrix..." << std::endl;
-            // }
         }
         else
         { //Else portion has been changed
@@ -329,7 +277,7 @@ int main(int argc, char* argv[]) {
         sleep(2);
         system("clear");
         display();
-        //If player makes match then game ends and the winning player is congradulated
+        //If player makes match then game ends and the winning player is congratulated
         if (count >= 5)
         {
             nc = check();
@@ -361,9 +309,5 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl << "Thank You for playing Tic-tac-Toe" << std::endl;
     close(newSd);
 
-    return 0;
-}
-
-void* ConnectionProcessor(void* socket) {
     return 0;
 }
