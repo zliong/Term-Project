@@ -13,6 +13,10 @@
 
 using namespace std;
 
+//Function prototypes.
+
+std::string getScoreboardThree(int socket);
+
 int main(int argc, char* argv[]) {
 
 	int sockfd, newsockfd, port_no, n, connectfd, bytes_sent, bytes_recvd;
@@ -262,7 +266,7 @@ int main(int argc, char* argv[]) {
 		sleep(2);
 		system("clear");
 		display();
-		//If player makes match then game ends and the winning player is congradulated
+		//If player makes match then game ends and the winning player is congratulated
 		if (count >= 5)
 		{
 			nc = check();
@@ -270,7 +274,7 @@ int main(int argc, char* argv[]) {
 				continue;
 			else if (serv_choice == nc)
 			{
-				cout << endl << "You loose." << endl << servName << " has won." << endl;
+				cout << endl << "You lose." << endl << servName << " has won." << endl;
 				break;
 			}
 			else if (cli_choice == nc)
@@ -286,9 +290,37 @@ int main(int argc, char* argv[]) {
 	if (nc == 'f')
 		cout << endl << "Game ends in a draw." << endl;
 
-
 	cout << endl << "Thank You for playing Tic-tac-Toe" << endl;
+	cout << "Current top 3:\n";
+	cout << getScoreboardThree(sockfd);
 	close(sockfd);
 
 	return 0;
+}
+
+std::string getScoreboardThree(int socket) {
+    std::string scoreboardStorage;
+    char message[MESSAGE_LENGTH];
+
+    //Take the first 3 entries.
+    for(int i = 0; i < 3; i++) {
+        //Get message.
+        read(socket, message, MESSAGE_LENGTH);
+
+        //Check if message is valid.
+        if(getMessagePurpose(message) != "SCOREENTRY") {
+            std::cout << "The server did not send an expected response. Closing.\n";
+            close(socket);
+            return "";
+        }
+
+        //Add to the return value.
+        scoreboardStorage += getMessageDetail(message);
+
+        //tell server we're ready for more.
+        //Reuse scoreboardstorage for efficiency.
+        scoreboardStorage = "READY:";
+        write(socket, scoreboardStorage.c_str(), scoreboardStorage.length());
+    }
+    return scoreboardStorage;
 }

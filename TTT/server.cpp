@@ -21,6 +21,7 @@
 //Function prototypes
 void incrementScoreboard(std::string user);
 std::string showScoreboard();
+void sendTopThreeScoreboard(int socket);
 
 int main(int argc, char* argv[]) {
     //Local Variables
@@ -366,4 +367,33 @@ std::string showScoreboard() {
         return entryGetter;
     }
     else { return "scoreboard file failed to open.\n"; }
+}
+
+void sendTopThreeScoreboard(int socket) {
+    string scoreboard = showScoreboard();
+    std::string scoreboardStorage;
+    char message[MESSAGE_LENGTH];
+
+    //Take the first 3 entries.
+    for(int i = 0; i < 3; i++) {
+        scoreboardStorage = "SCOREENTRY:";
+        //If the scoreboard isn't 3 big.
+        try {
+            scoreboardStorage += scoreboard.substr('\n');
+            scoreboard.erase(0, scoreboardStorage.length()); //To clear what we just substr.
+        }
+        catch (exception e) {
+            scoreboardStorage = "";
+        }
+
+        write(socket, scoreboardStorage.c_str(), scoreboardStorage.length());
+
+        //Wait for the client to say its ready for another piece.
+        read(socket, message, MESSAGE_LENGTH);
+        if (!checkResponsePurpose(message, "READY")) {
+            close(socket);
+            std::cout << "The client did not have an expected response. Closing.\n";
+            return;
+        }
+    }
 }
