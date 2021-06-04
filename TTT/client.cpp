@@ -1,17 +1,13 @@
 /* This is the client side code to connect to a tic-tac-toe game server.
  */
 #include <iostream>
-#include <string>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <time.h>
 #include <unistd.h>
 #include <sys/socket.h>
-#include <sys/types.h>
 #include <netinet/in.h>
 #include <netdb.h>
-#include <arpa/inet.h>
 #include "TTT.h"
 #define  PORT "9987"
 

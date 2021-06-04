@@ -1,5 +1,5 @@
-//This part was assigned to Logan Petersen to do.
-// Code from 432 Program 1, with net code modifications from
+//This part was assigned to Logan Petersen to do, and I wrote.
+// Code from 432 Program 1, with modifications from
 // https://github.com/indradhanush/Multiplayer-tic-tac-toe/
 // to improve the error handling and adapt the program to be
 // a tic tac toe client and host at the same time.
@@ -14,9 +14,13 @@
 #include <string>         //string
 #include <iostream>
 #include "TTT.h"
+#include <fstream>
+#include <vector>
+#include <algorithm>
 
-//Function Prototype
-void* ConnectionProcessor(void* socket);
+//Function prototypes
+void incrementScoreboard(std::string user);
+std::string showScoreboard();
 
 int main(int argc, char* argv[]) {
     //Local Variables
@@ -27,6 +31,10 @@ int main(int argc, char* argv[]) {
     std::string userInput;
     std::string messageBuilder;
     char message[MESSAGE_LENGTH];
+    sockaddr_in acceptSock;
+    sockaddr_in newsock;
+    const int on = 1;
+    int totalConnections = 1; //Tic tac toe is 2 players, this client is the host and player 1.
 
     //Improvement to make the program more user-friendly.
     if (argc < 2) {
@@ -36,11 +44,6 @@ int main(int argc, char* argv[]) {
     else {
         port = atoi(argv[1]);
     }
-
-    sockaddr_in acceptSock;
-    const int on = 1;
-    sockaddr_in newsock;
-    int totalConnections = 1; //Tic tac toe is 2 players, this client is the host and player 1.
 
     bzero((char*)&acceptSock, sizeof(acceptSock));  // zero out the data structure
     acceptSock.sin_family = AF_INET;   // using IP
@@ -285,11 +288,13 @@ int main(int argc, char* argv[]) {
                 continue;
             else if (cli_choice == nc)
             {
-                std::cout << std::endl << "You loose." << std::endl << serverName << " has won." << std::endl;
+                incrementScoreboard(serverName);
+                std::cout << std::endl << "You lose." << std::endl << serverName << " has won." << std::endl;
                 break;
             }
             else if (serv_choice == nc)
             {
+                incrementScoreboard(clientName);
                 std::cout << std::endl << "Congrats! You have won!!!" << std::endl << clientName << " lost." << std::endl;
                 break;
             }
@@ -304,10 +309,61 @@ int main(int argc, char* argv[]) {
         //send info to client that the game has drawn
     }
 
-
-
     std::cout << std::endl << "Thank You for playing Tic-tac-Toe" << std::endl;
+    std::cout << "Current Scoreboard:\n" << showScoreboard();
     close(newSd);
 
     return 0;
+}
+
+void incrementScoreboard(std::string user) {
+    std::ofstream file;
+
+    file.open("scoreboard.txt");
+    if(file.is_open()) {
+        file << user;
+        file << '\n';
+        file.close();
+    }
+    else { std::cout << "scoreboard file failed to open.\n"; }
+
+}
+std::string showScoreboard() {
+
+    std::ifstream file;
+    vector<pair<int, std::string>> scoreboard;
+    std::string entryGetter;
+    bool userExists = false;
+
+    file.open("scoreboard.txt");
+    if(file.is_open()){
+        while(!file.eof()) {
+            userExists = false;
+            std::getline(file, entryGetter);
+            entryGetter.pop_back(); //Remove the \n
+            for(pair<int, std::string> i : scoreboard) {
+                if(i.second == entryGetter) {
+                    //User exists, increment.
+                    userExists = true;
+                    i.first++;
+                    break; //Break since we found entry, we are done.
+                }
+            }
+            //If entry doesn't exist, add it.
+            if(!userExists) {
+                scoreboard.push_back(make_pair(1, entryGetter));
+            }
+        }
+        //The reason the pair is int string is because it makes it easy to sort.
+        sort(scoreboard.begin(), scoreboard.end());
+
+        //Now we build the scoreboard as a string.
+        //Reuse entrygetter since its purpose is done.
+        entryGetter = "";
+        for(pair<int, std::string> i : scoreboard) {
+            entryGetter += i.second + ": " + to_string(i.first) + '\n';
+        }
+        return entryGetter;
+    }
+    else { return "scoreboard file failed to open.\n"; }
 }
