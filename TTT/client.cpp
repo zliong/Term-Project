@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 	struct hostent* host;
 	char message[MESSAGE_LENGTH];
 	std::string messageBuilder;
-
+	int port_input;
 	string inputs, servName, first;
 	int count = 0;
 	int inp, x, y, ni, toss;
@@ -36,13 +36,14 @@ int main(int argc, char* argv[]) {
 	char choice_buffer[2], co_ordinates_buffer[2], toss_buffer;
 
 	//Testing if correct arguments were used testing
-	if (argc != 2) {
-		perror("Incomplete arguments passed in.");
-		return 1;
-	}
+	// if (argc != 2) {
+	// 	perror("Incomplete arguments passed in.");
+	// 	return 1;
+	// }
+	cout << "Please input the port number for your host game: ";
+	cin >> port_no;
 	//Checks to see if host exists
-	port_no = atoi(ptr_port);
-	host = gethostbyname(argv[1]);
+	host = gethostbyname("127.0.0.1");
 	if (host == NULL) {
 		perror("Host doesn't exist!!");
 		return 1;
