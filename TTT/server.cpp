@@ -83,7 +83,7 @@ int main(int argc, char* argv[]) {
     }
     clientName = getMessageDetail(message);
     //cout << "Message contains: " << getMessageDetail(message) << endl;
-    std::cout << "Your opponent is " << clientName << '. ';
+    std::cout << "Your opponent is " << clientName << ". ";
 
     //Send message seeing if they're ready to play.
     messageBuilder = "READYCHECK:";
