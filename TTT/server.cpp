@@ -345,16 +345,16 @@ std::string showScoreboard() {
     bool userExists = false;
 
     file.open("scoreboard.txt");
-    if (file.is_open()) {
-        while (!file.eof()) {
+    if(file.is_open()){
+        while(!file.eof()) {
             userExists = false;
             std::getline(file, entryGetter);
-            if (entryGetter != "") {
-                for (pair<int, std::string> i : scoreboard) {
-                    if (i.second == entryGetter) {
+            if(entryGetter != "") {
+                for (int i = 0; i < scoreboard.size(); i++) {
+                    if (scoreboard.at(i).second == entryGetter) {
                         //User exists, increment.
                         userExists = true;
-                        i.first++;
+                        ++scoreboard.at(i).first;
                         break; //Break since we found entry, we are done.
                     }
                 }
