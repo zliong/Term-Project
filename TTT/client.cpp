@@ -111,8 +111,6 @@ int main(int argc, char* argv[]) {
 	cout << endl << "Game created!" << endl;
 	cout << "You have joined " << servName << "'s game!" << endl;
 
-	//who first starts here, get response from server
-	cout << "Message = " << convertToString(message, 100) << endl;
     cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	//check if message is WHOFIRST

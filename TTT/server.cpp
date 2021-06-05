@@ -293,12 +293,12 @@ int main(int argc, char* argv[]) {
             else if (cli_choice == nc)
             {
                 incrementScoreboard(serverName);
-                std::cout << std::endl << "You lose." << std::endl << serverName << " has won." << std::endl;
+                std::cout << std::endl << "You lose." << std::endl << clientName << " has won." << std::endl;
                 break;
             }
             else if (serv_choice == nc)
             {
-                incrementScoreboard(clientName);
+                incrementScoreboard(serverName);
                 std::cout << std::endl << "Congrats! You have won!!!" << std::endl << clientName << " lost." << std::endl;
                 break;
             }
@@ -324,7 +324,7 @@ int main(int argc, char* argv[]) {
 void incrementScoreboard(std::string user) {
     std::ofstream file;
 
-    file.open("scoreboard.txt");
+    file.open("scoreboard.txt", std::ios::app); //Append mode.
     if(file.is_open()) {
         file << user;
         file << '\n';
