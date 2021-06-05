@@ -1,6 +1,6 @@
 # Term-Project
 
-How to play the game
+How to play the game (TTT Folder only)
 
 1.Compile the two cpp's files: Server and Client. (Hint: g++ server.cpp -o server and g++ client.cpp -o client)
 
