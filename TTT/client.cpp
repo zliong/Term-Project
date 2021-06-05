@@ -232,7 +232,6 @@ int main(int argc, char* argv[]) {
 	while (count < 9)
 	{
 		messageBuilder = "TURNS:";
-		memset(&co_ordinates_buffer, 0, sizeof(co_ordinates_buffer));
 
 		if (inp % 2 == 0)
 		{
