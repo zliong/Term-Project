@@ -72,10 +72,9 @@ int main(int argc, char* argv[]) {
     messageBuilder = "USERNAMEQUERY:";
     messageBuilder += serverName;
     write(newSd, messageBuilder.c_str(), messageBuilder.length());
-    for (int i = 0; i < MESSAGE_LENGTH; i++) {
-        message[i] = '\0';
-    };
+
     //Get response
+    cleanArray(message);
     read(newSd, message, MESSAGE_LENGTH);
     if (!checkResponsePurpose(message, "USERNAMEQUERY")) {
         close(newSd);
@@ -84,7 +83,7 @@ int main(int argc, char* argv[]) {
     }
     clientName = getMessageDetail(message);
     //cout << "Message contains: " << getMessageDetail(message) << endl;
-    std::cout << "Your opponent is " << clientName << '.';
+    std::cout << "Your opponent is " << clientName << '. ';
 
     //Send message seeing if they're ready to play.
     messageBuilder = "READYCHECK:";
@@ -94,6 +93,7 @@ int main(int argc, char* argv[]) {
     };
     //Get response
     do {
+        cleanArray(message);
         read(newSd, message, MESSAGE_LENGTH);
         //cout << "Message Contains = " << getMessageDetail(message) << endl;
         //cout << "loop" << endl;
@@ -124,6 +124,7 @@ int main(int argc, char* argv[]) {
     for (int i = 0; i < MESSAGE_LENGTH; i++) {
         message[i] = '\0';
     };
+    cleanArray(message);
     read(newSd, message, MESSAGE_LENGTH);
     if (!checkResponsePurpose(message, "WHOFIRST")) {
         close(newSd);
@@ -162,6 +163,7 @@ int main(int argc, char* argv[]) {
         std::cout << std::endl << clientName << " goes first!" << std::endl;
         std::cout << clientName << " is choosing. Please wait..." << std::endl << std::endl;
         //Client waits to receive server choice
+        cleanArray(message);
         read(newSd, message, MESSAGE_LENGTH);
         if (!checkResponsePurpose(message, "FIRSTCHOICE")) {
             close(newSd);
@@ -259,6 +261,7 @@ int main(int argc, char* argv[]) {
         else
         { //Else portion has been changed
             std::cout << std::endl << clientName << "'s turn. Please wait..." << std::endl;
+            cleanArray(message);
             read(newSd, message, MESSAGE_LENGTH);
             if (!checkResponsePurpose(message, "TURNS")) {
                 close(newSd);
@@ -312,6 +315,7 @@ int main(int argc, char* argv[]) {
 
     std::cout << std::endl << "Thank You for playing Tic-tac-Toe" << std::endl;
     std::cout << "Current Scoreboard:\n" << showScoreboard();
+    sendTopThreeScoreboard(newSd);
     close(newSd);
 
     return 0;
@@ -341,18 +345,19 @@ std::string showScoreboard() {
         while(!file.eof()) {
             userExists = false;
             std::getline(file, entryGetter);
-            entryGetter.pop_back(); //Remove the \n
-            for(pair<int, std::string> i : scoreboard) {
-                if(i.second == entryGetter) {
-                    //User exists, increment.
-                    userExists = true;
-                    i.first++;
-                    break; //Break since we found entry, we are done.
+            if(entryGetter != "") {
+                for (pair<int, std::string> i : scoreboard) {
+                    if (i.second == entryGetter) {
+                        //User exists, increment.
+                        userExists = true;
+                        i.first++;
+                        break; //Break since we found entry, we are done.
+                    }
                 }
-            }
-            //If entry doesn't exist, add it.
-            if(!userExists) {
-                scoreboard.push_back(make_pair(1, entryGetter));
+                //If entry doesn't exist, add it.
+                if (!userExists) {
+                    scoreboard.push_back(make_pair(1, entryGetter));
+                }
             }
         }
         //The reason the pair is int string is because it makes it easy to sort.
@@ -389,6 +394,7 @@ void sendTopThreeScoreboard(int socket) {
         write(socket, scoreboardStorage.c_str(), scoreboardStorage.length());
 
         //Wait for the client to say its ready for another piece.
+        cleanArray(message);
         read(socket, message, MESSAGE_LENGTH);
         if (!checkResponsePurpose(message, "READY")) {
             close(socket);

@@ -70,6 +70,7 @@ int main(int argc, char* argv[]) {
 	cout << "Enter your name : ";
 	cin >> cname;
 
+    cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	if (!checkResponsePurpose(message, "USERNAMEQUERY")) {
 		close(sockfd);
@@ -83,6 +84,7 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < MESSAGE_LENGTH; i++) {
 		message[i] = '\0';
 	};
+    cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	//cout << "Message now contains:" << getMessageDetail(message) << endl;
 	if (!checkResponsePurpose(message, "READYCHECK")) {
@@ -111,6 +113,7 @@ int main(int argc, char* argv[]) {
 
 	//who first starts here, get response from server
 	cout << "Message = " << convertToString(message, 100) << endl;
+    cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	//check if message is WHOFIRST
 	if (!checkResponsePurpose(message, "WHOFIRST")) {
@@ -131,6 +134,7 @@ int main(int argc, char* argv[]) {
 		message[i] = '\0';
 	};
 	//get response from server
+    cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	first = getMessageDetail(message);
 	//cout << "First contains " << first << endl;
@@ -143,6 +147,7 @@ int main(int argc, char* argv[]) {
 		cout << endl << servName << " Server goes first!" << endl;
 		cout << servName << " is choosing. Please wait..." << endl << endl;
 		//Client waits to receive server choice
+        cleanArray(message);
 		read(sockfd, message, MESSAGE_LENGTH);
 		if (!checkResponsePurpose(message, "FIRSTCHOICE")) {
 			close(sockfd);
@@ -229,6 +234,7 @@ int main(int argc, char* argv[]) {
 		if (inp % 2 == 0)
 		{
 			cout << endl << servName << "'s turn. Please wait..." << endl;
+            cleanArray(message);
 			read(sockfd, message, MESSAGE_LENGTH);
 			if (!checkResponsePurpose(message, "TURNS")) {
 				close(sockfd);
@@ -305,6 +311,7 @@ std::string getScoreboardThree(int socket) {
     //Take the first 3 entries.
     for(int i = 0; i < 3; i++) {
         //Get message.
+        cleanArray(message);
         read(socket, message, MESSAGE_LENGTH);
 
         //Check if message is valid.

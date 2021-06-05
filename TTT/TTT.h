@@ -12,6 +12,13 @@ void display();
 int input(char input, int row, int col);
 char check();
 
+//Clean the char message to ensure good input.
+void cleanArray(char* message) {
+    for (int i = 0; i < MESSAGE_LENGTH; i++) {
+        message[i] = '\0';
+    };
+}
+
 //See if the response purpose matches what we expect.
 bool checkResponsePurpose(char message[MESSAGE_LENGTH], std::string expected) {
 	string strMessage(message);
