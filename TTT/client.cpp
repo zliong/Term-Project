@@ -166,7 +166,7 @@ int main(int argc, char* argv[]) {
 			serv_choice = 'O';
 			cli_choice = 'X';
 		}
-		cout << serv_choice << " has chosen " << serv_choice << endl << endl << "You will play with " << cli_choice << endl;
+		cout << servName << " has chosen " << serv_choice << endl << endl << "You will play with " << cli_choice << endl;
 		cout << endl << "Lets Play!" << endl << endl;
 
 	}
