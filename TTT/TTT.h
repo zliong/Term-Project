@@ -14,9 +14,9 @@ char check();
 
 //Clean the char message to ensure good input.
 void cleanArray(char* message) {
-    for (int i = 0; i < MESSAGE_LENGTH; i++) {
-        message[i] = '\0';
-    };
+	for (int i = 0; i < MESSAGE_LENGTH; i++) {
+		message[i] = '\0';
+	};
 }
 
 //See if the response purpose matches what we expect.

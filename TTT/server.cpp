@@ -27,7 +27,7 @@ void sendTopThreeScoreboard(int socket);
 int main(int argc, char* argv[]) {
     //Local Variables
     int port;
-    std::string serverName = "The original, epic, truly amazing... Server 1.";
+    std::string serverName;
     std::string clientName;
     std::string chat;
     std::string userInput;
@@ -39,14 +39,17 @@ int main(int argc, char* argv[]) {
     int totalConnections = 1; //Tic tac toe is 2 players, this client is the host and player 1.
 
     //Improvement to make the program more user-friendly.
-    if (argc < 2) {
-        std::cout << "Error occurred: bad port number argument.\n";
-        return -1;
-    }
-    else {
-        port = atoi(argv[1]);
-    }
-
+    // if (argc < 2) {
+    //     std::cout << "Error occurred: bad port number argument.\n";
+    //     return -1;
+    // }
+    // else {
+    //     port = atoi(argv[1]);
+    // }
+    cout << "Please input the name of your server: ";
+    cin >> serverName;
+    cout << "Please input the port of your server: ";
+    cin >> port;
     bzero((char*)&acceptSock, sizeof(acceptSock));  // zero out the data structure
     acceptSock.sin_family = AF_INET;   // using IP
     acceptSock.sin_addr.s_addr = htonl(INADDR_ANY); // listen on any address this computer has
@@ -136,7 +139,7 @@ int main(int argc, char* argv[]) {
     //Compare number, say who's going first.
     string tempMsg;
     messageBuilder = "WHOFIRST:";
-    cout << "WHOMessage contains = " << getMessageDetail(message) << endl;
+    //cout << "WHOMessage contains = " << getMessageDetail(message) << endl;
     if (stoi(userInput) > stoi(getMessageDetail(message))) {
         std::cout << "You go first.\n";
         messageBuilder += "server";
@@ -326,7 +329,7 @@ void incrementScoreboard(std::string user) {
     std::ofstream file;
 
     file.open("scoreboard.txt", std::ios::app); //Append mode.
-    if(file.is_open()) {
+    if (file.is_open()) {
         file << user;
         file << '\n';
         file.close();
@@ -342,11 +345,11 @@ std::string showScoreboard() {
     bool userExists = false;
 
     file.open("scoreboard.txt");
-    if(file.is_open()){
-        while(!file.eof()) {
+    if (file.is_open()) {
+        while (!file.eof()) {
             userExists = false;
             std::getline(file, entryGetter);
-            if(entryGetter != "") {
+            if (entryGetter != "") {
                 for (pair<int, std::string> i : scoreboard) {
                     if (i.second == entryGetter) {
                         //User exists, increment.
@@ -368,7 +371,7 @@ std::string showScoreboard() {
         //Now we build the scoreboard as a string.
         //Reuse entrygetter since its purpose is done.
         entryGetter = "";
-        for(pair<int, std::string> i : scoreboard) {
+        for (pair<int, std::string> i : scoreboard) {
             entryGetter += i.second + ": " + to_string(i.first) + '\n';
         }
         return entryGetter;
@@ -382,11 +385,11 @@ void sendTopThreeScoreboard(int socket) {
     char message[MESSAGE_LENGTH];
 
     //Take the first 3 entries.
-    for(int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
         //If the scoreboard isn't 3 big.
         scoreboardStorage = "";
         try {
-            scoreboardStorage += scoreboard.substr(0,scoreboard.find('\n')+1);
+            scoreboardStorage += scoreboard.substr(0, scoreboard.find('\n') + 1);
             scoreboard.erase(0, scoreboardStorage.length()); //To clear what we just substr.
         }
         catch (exception e) {

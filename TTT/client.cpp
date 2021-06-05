@@ -1,5 +1,7 @@
-/* This is the client side code to connect to a tic-tac-toe game server.
- */
+// Code from 432 Program 1, with modifications and inspiration from
+// https://github.com/indradhanush/Multiplayer-tic-tac-toe/
+// to improve the error handling and adapt the program to be
+// a tic tac toe client and host at the same time. 
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>
@@ -27,6 +29,7 @@ int main(int argc, char* argv[]) {
 	struct hostent* host;
 	char message[MESSAGE_LENGTH];
 	std::string messageBuilder;
+	string server_ip;
 	int port_input;
 	string inputs, servName, first;
 	int count = 0;
@@ -40,10 +43,12 @@ int main(int argc, char* argv[]) {
 	// 	perror("Incomplete arguments passed in.");
 	// 	return 1;
 	// }
+	cout << "Please input the IP number for your host's game: ";
+	cin >> server_ip;
 	cout << "Please input the port number for your host game: ";
 	cin >> port_no;
 	//Checks to see if host exists
-	host = gethostbyname("127.0.0.1");
+	host = gethostbyname(server_ip.c_str());
 	if (host == NULL) {
 		perror("Host doesn't exist!!");
 		return 1;
@@ -71,7 +76,7 @@ int main(int argc, char* argv[]) {
 	cout << "Enter your name : ";
 	cin >> cname;
 
-    cleanArray(message);
+	cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	if (!checkResponsePurpose(message, "USERNAMEQUERY")) {
 		close(sockfd);
@@ -85,7 +90,7 @@ int main(int argc, char* argv[]) {
 	for (int i = 0; i < MESSAGE_LENGTH; i++) {
 		message[i] = '\0';
 	};
-    cleanArray(message);
+	cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	//cout << "Message now contains:" << getMessageDetail(message) << endl;
 	if (!checkResponsePurpose(message, "READYCHECK")) {
@@ -112,7 +117,7 @@ int main(int argc, char* argv[]) {
 	cout << endl << "Game created!" << endl;
 	cout << "You have joined " << servName << "'s game!" << endl;
 
-    cleanArray(message);
+	cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	//check if message is WHOFIRST
 	if (!checkResponsePurpose(message, "WHOFIRST")) {
@@ -133,7 +138,7 @@ int main(int argc, char* argv[]) {
 		message[i] = '\0';
 	};
 	//get response from server
-    cleanArray(message);
+	cleanArray(message);
 	read(sockfd, message, MESSAGE_LENGTH);
 	first = getMessageDetail(message);
 	//cout << "First contains " << first << endl;
@@ -146,7 +151,7 @@ int main(int argc, char* argv[]) {
 		cout << endl << servName << " Server goes first!" << endl;
 		cout << servName << " is choosing. Please wait..." << endl << endl;
 		//Client waits to receive server choice
-        cleanArray(message);
+		cleanArray(message);
 		read(sockfd, message, MESSAGE_LENGTH);
 		if (!checkResponsePurpose(message, "FIRSTCHOICE")) {
 			close(sockfd);
@@ -233,7 +238,7 @@ int main(int argc, char* argv[]) {
 		if (inp % 2 == 0)
 		{
 			cout << endl << servName << "'s turn. Please wait..." << endl;
-            cleanArray(message);
+			cleanArray(message);
 			read(sockfd, message, MESSAGE_LENGTH);
 			if (!checkResponsePurpose(message, "TURNS")) {
 				close(sockfd);
@@ -304,30 +309,30 @@ int main(int argc, char* argv[]) {
 }
 
 std::string getScoreboardThree(int socket) {
-    std::string scoreboardStorage;
-    std::string messageBuilder;
-    char message[MESSAGE_LENGTH];
+	std::string scoreboardStorage;
+	std::string messageBuilder;
+	char message[MESSAGE_LENGTH];
 
-    //Take the first 3 entries.
-    for(int i = 0; i < 3; i++) {
-        //Get message.
-        cleanArray(message);
-        read(socket, message, MESSAGE_LENGTH);
+	//Take the first 3 entries.
+	for (int i = 0; i < 3; i++) {
+		//Get message.
+		cleanArray(message);
+		read(socket, message, MESSAGE_LENGTH);
 
-        //Check if message is valid.
-        if(getMessagePurpose(message) != "SCOREENTRY") {
-            std::cout << "The server did not send an expected response. Closing.\n";
-            close(socket);
-            return "";
-        }
+		//Check if message is valid.
+		if (getMessagePurpose(message) != "SCOREENTRY") {
+			std::cout << "The server did not send an expected response. Closing.\n";
+			close(socket);
+			return "";
+		}
 
-        //Add to the return value.
-        scoreboardStorage += getMessageDetail(message);
+		//Add to the return value.
+		scoreboardStorage += getMessageDetail(message);
 
-        //tell server we're ready for more.
-        //Reuse scoreboardstorage for efficiency.
-        messageBuilder = "READY:";
-        write(socket, messageBuilder.c_str(), messageBuilder.length());
-    }
-    return scoreboardStorage;
+		//tell server we're ready for more.
+		//Reuse scoreboardstorage for efficiency.
+		messageBuilder = "READY:";
+		write(socket, messageBuilder.c_str(), messageBuilder.length());
+	}
+	return scoreboardStorage;
 }
