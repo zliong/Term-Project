@@ -66,6 +66,7 @@ int main(int argc, char* argv[]) {
 		perror("Sorry. Could not connect to server.");
 		return 1;
 	}
+
 	//If connected user prompted with name choice
 	cout << "Enter your name : ";
 	cin >> cname;
@@ -304,6 +305,7 @@ int main(int argc, char* argv[]) {
 
 std::string getScoreboardThree(int socket) {
     std::string scoreboardStorage;
+    std::string messageBuilder;
     char message[MESSAGE_LENGTH];
 
     //Take the first 3 entries.
@@ -324,8 +326,8 @@ std::string getScoreboardThree(int socket) {
 
         //tell server we're ready for more.
         //Reuse scoreboardstorage for efficiency.
-        scoreboardStorage = "READY:";
-        write(socket, scoreboardStorage.c_str(), scoreboardStorage.length());
+        messageBuilder = "READY:";
+        write(socket, messageBuilder.c_str(), messageBuilder.length());
     }
     return scoreboardStorage;
 }

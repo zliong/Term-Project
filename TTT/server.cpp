@@ -17,6 +17,7 @@
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <sstream>
 
 //Function prototypes
 void incrementScoreboard(std::string user);
@@ -381,15 +382,16 @@ void sendTopThreeScoreboard(int socket) {
 
     //Take the first 3 entries.
     for(int i = 0; i < 3; i++) {
-        scoreboardStorage = "SCOREENTRY:";
         //If the scoreboard isn't 3 big.
+        scoreboardStorage = "";
         try {
-            scoreboardStorage += scoreboard.substr('\n');
+            scoreboardStorage += scoreboard.substr(0,scoreboard.find('\n')+1);
             scoreboard.erase(0, scoreboardStorage.length()); //To clear what we just substr.
         }
         catch (exception e) {
             scoreboardStorage = "";
         }
+        scoreboardStorage = "SCOREENTRY:" + scoreboardStorage;
 
         write(socket, scoreboardStorage.c_str(), scoreboardStorage.length());
 
