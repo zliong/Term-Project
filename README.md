@@ -19,6 +19,8 @@ How to play the game
   
 6. Finally, it will ask you to pick a number between 0 to 10, whoever gets the highest will go pick their variable they want (X or O). 
 
+7. You can play the standard game of Tic-Tac-Toe (Hint: You can use the on-screen guidance to input commands). Scoreboard will be updated at the end of the game.
 
+Note: The only way to truly Log off is the prompt to play the game or not. If you exit the game in the middle of it, then the server or client must down his or her own application. Therefore, there is no logging off mid-game. Only at the beginning or ending of the application.
 
 Note: X will always go first in placing markers.
