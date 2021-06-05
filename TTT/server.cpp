@@ -361,6 +361,7 @@ std::string showScoreboard() {
                 }
             }
         }
+        file.close();
         //The reason the pair is int string is because it makes it easy to sort.
         sort(scoreboard.begin(), scoreboard.end());
 
