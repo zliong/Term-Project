@@ -1,7 +1,6 @@
-// Code from 432 Program 1, with modifications and inspiration from
+// Code with modifications and inspiration from
 // https://github.com/indradhanush/Multiplayer-tic-tac-toe/
-// to improve the error handling and adapt the program to be
-// a tic tac toe client and host at the same time. 
+// We used this as instructions to build our game, but not the protocol.
 #include <iostream>
 #include <cstdio>
 #include <cstdlib>

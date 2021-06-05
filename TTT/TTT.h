@@ -1,3 +1,7 @@
+// Code from 432 Program 1, with modifications and inspiration from
+// https://github.com/indradhanush/Multiplayer-tic-tac-toe/
+// We used this as instructions to build our game, but not the protocol.
+
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
